@@ -1,0 +1,53 @@
+package edu.hfu.broadcast.bean;
+
+/*用户表*/
+import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = false)
+public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
+	private Integer userId; // 用户编号
+	@Column(length = 50)
+	private String openId; // 第三方授权
+	@Column(length = 20)
+	private String loginIp; // 登录ip
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	private Date loginTime; // 登录时间
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	private Date logoutTime; // 退出时间		
+	@Column(length = 15)
+	private String phoneNum;  //手机号
+	@Column(length = 20)
+	private String userCategory;  //用户类别
+	@Column(length = 30)
+	private String password;  //用户密码
+	
+	
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "company")
+	@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
+	private Company company;
+	
+	
+
+}

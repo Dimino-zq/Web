@@ -1,0 +1,16 @@
+package edu.hfu.broadcast.action.sysset;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+@RestController
+@RequestMapping(value = "/sysgoods")
+public class SysGoodsAction {
+
+	@RequestMapping(value = "/gotosysgoods", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView gotocomgoodsinformation() {
+		ModelAndView mod = new ModelAndView("sysset/SysGoods.btl");
+		return mod;
+}
+}

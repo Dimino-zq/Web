@@ -1,0 +1,31 @@
+package edu.hfu.broadcast.service.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.dao.sysset.SystemDao;
+
+@Service
+@Transactional
+public class SystemService {
+	@Resource
+	SystemDao systemdao;
+	
+	//获取全部
+	public List<SysPlatInformation> getAllSysPlatInformation() throws Exception {
+		return systemdao.getAllSysPlatInformation();
+	}
+	
+	//修改
+		public String updSysPlatInformation(SysPlatInformation system) throws Exception {
+			SysPlatInformation plat = systemdao.GetSysPlatInformationById(system);
+			plat.setPlatformName(system.getPlatformName());
+			systemdao.updSysPlatInformation(plat);
+			return "succ";
+		}
+}

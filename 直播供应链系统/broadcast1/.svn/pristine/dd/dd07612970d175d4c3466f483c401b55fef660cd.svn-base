@@ -1,0 +1,84 @@
+package edu.hfu.broadcast.dao.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+@Repository
+public class SystemDao {
+	@Resource
+	private BaseDaoImpl dao;
+
+	// 获取全部
+	public List<SysPlatInformation> getAllSysPlatInformation(SysPlatInformation system) throws Exception {
+		String hql = "from SysPlatInformation";
+		return dao.find(hql);
+	}
+
+	// 修改
+	public void updSysPlatInformation(SysPlatInformation system) throws Exception {
+		dao.update(system);
+	}
+
+	// 根据Id查询
+	public SysPlatInformation GetSysPlatInformationById(SysPlatInformation system) throws Exception {
+		String hql = "from SysPlatInformation where platformId = " + system.getPlatformId();
+		return (SysPlatInformation) dao.find(hql).get(0);
+	}
+
+	// 获取用户
+	public List<SysUser> getUser(SysUser plat) throws Exception {
+		String hql = "from SysUser where userId='" + plat.getUserId() + "'";
+		return dao.find(hql);
+	}
+
+	public void chgPassword(SysUser platForPassword) throws Exception {
+		dao.update(platForPassword);
+
+	}
+
+	public List<SysPlatInformation> getPlatInfomation(Integer userId) throws Exception {
+		String hql = "from SysPlatInformation where user='" + userId + "'";
+		return dao.find(hql);
+
+	}
+	/**
+	 * 通过手机号获取企业
+	 * @param phoneNum
+	 * @return
+	 * @throws Exception
+	 */
+	public SysCompany getCompanyByUser(String phoneNum)throws Exception {
+		String hql="from SysCompany  a where  a.user.phoneNum= ?0";
+		List<SysCompany> ls=dao.find(hql,phoneNum);
+		if (null!=ls&&ls.size()>0) {
+			return ls.get(0);
+		}else {
+			return null;
+		}
+	}
+	/**
+	 * 通过手机号获取主播
+	 * @param phoneNum
+	 * @return
+	 * @throws Exception
+	 */
+	public AnchorInformation getAnchorByUser(String phoneNum)throws Exception {
+		String hql="from AnchorInformation  a where  a.user.phoneNum= ?0";
+		List<AnchorInformation> ls=dao.find(hql,phoneNum);
+		if (null!=ls&&ls.size()>0) {
+			return ls.get(0);
+		}else {
+			return null;
+		}
+	}
+
+}

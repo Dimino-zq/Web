@@ -1,0 +1,38 @@
+$(document).ready(function(){
+	//var path=getRootPath();
+	clearForm();
+	initTable();
+	//重置对话框表单函数
+	function clearForm(){
+	}
+	
+	//初始化数据表格
+	function initTable() {
+		//var url=path+"/anchor/gotoAnchor";
+		$('#tbl_anchorApplication').datagrid({
+	        loadMsg:"加载数据中......",
+	    	//url:url,
+	        border:false,
+	        striped:true,
+	        fit:true,
+	        rownumbers:true,
+	        autoRowHeight:false,
+	        singleSelect:true,
+	        fitColumns:true,
+	        pagePosition:"bottom",
+	        pagination:true,
+	        pageSize:10,
+	        pageList:[10,20,50],
+	        pageNumber:1,
+	        columns:[[
+	            {field: 'anchorName',title: '姓名',width:150},
+	            {field: 'anchorSex',title: '性别',width:150},
+	           /* {field: 'goodsKind',title: '申请类目',width:150},
+	            {field: 'reason',title: '申请理由',width:150},
+	            {field: 'checkstate',title: '审批状态',width:150},*/
+	         ]]
+		})
+	}
+
+
+})

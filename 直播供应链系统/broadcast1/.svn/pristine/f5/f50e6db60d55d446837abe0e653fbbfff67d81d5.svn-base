@@ -1,0 +1,5 @@
+package edu.hfu.broadcast.dao.sysset;
+
+public class MerchKindDao {
+
+}

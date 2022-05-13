@@ -1,0 +1,45 @@
+package edu.hfu.broadcast.bean;
+
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/*申请表信息表*/
+@SuppressWarnings("serial")
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = false)
+public class AnchorApplication extends SysBaseTable{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
+	private Integer applicationId; // 申请表编号
+	@Column(length = 10)
+	private String status; // 状态
+	@Column(length = 10)
+	private String applicationContent; // 申请内容
+	@Column(length = 10)
+	private String commission; // 佣金
+	@Column(length = 10)
+	private String pitFee; // 坑位数
+	@Column(length = 10)
+	private String pitAmount; // 招商计划书
+	@Column(length = 10)
+	private String businessCategory; // 商品类别
+	@Column(length = 10)
+	private String workTime; // 直播时间段
+
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.DETACH)
+	@JoinColumn(name = "anchorId")
+	private AnchorInformation anchorInformation;
+}
+

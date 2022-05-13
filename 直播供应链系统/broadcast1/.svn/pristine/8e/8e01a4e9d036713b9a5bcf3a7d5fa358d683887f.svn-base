@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/anchordistribute.js"></script>
+<title>主播商品</title>
+</head>
+<body class="easyui-layout"  data-options="fit:true">
+	<div data-options="region:'north',minHeight:37,border:false">
+	<form id="form_query" >
+	<table style="margin-top:1px;">
+	    <tr>
+	      <td>商品名:<input class="easyui-textbox" name="comName" style="width: 150px;"></td>
+	      <td>价格:<input class="easyui-textbox" name="comKind" style="width: 150px;"></td>
+	      <td>佣金:<input class="easyui-textbox" name="comKind" style="width: 150px;"></td>
+	  <td><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></td>
+	    </tr>
+	</table>
+	</form>
+	</div>
+	<div  data-options="region:'center'" style="border-width: 0;">
+	<table id="tt"  class="easyui-datagrid"  title="商品展示表格" singleSelect="true" fitColumns="true" remoteSort="false"
+	      pagination="true" sortOrder="desc" sortName="brand">
+	</table>
+	</div>
+	<div data-options="region:'south',border:'false',minHeight:40"  >
+	<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+		  <a class="easyui-linkbutton" id="btn_appDlg" href="#" data-options="iconCls:'icon-add '">申请</a>
+	      <a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-add '">向平台获取商品</a>
+		  <a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>
+	</div>
+	  </div>
+	  
+	  	<div title="申请表" class="easyui-dialog" id="dlg_app" style="width: 450px; height: 270px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+			<div style="width:100%;">
+				<form id="form_app">
+					<table style="text-align: center;margin-left: auto;margin-right: auto;">
+					</table>
+				</form>
+			</div>
+		</div>
+		
+		<div id="div_buttons">
+			<a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+
+</body>
+</html>

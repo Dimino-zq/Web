@@ -1,0 +1,125 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	//alert(111);
+	company();
+	
+	$("#btn_assignDlg").click(function(){
+		$("#dlg_assign").dialog("open");
+		var rowUser=$("#tbl_company").datagrid("getSelected");
+			console.log(rowUser);
+			var grant = rowUser.grants;
+     		
+		var url=path+"/sysgrantcode/getAllSysGrantCode";
+		console.log(url);
+	    $("#tbl_assign").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            
+            fitColumns:true,
+           
+           
+	    	columns:[[
+			{field:"grantCode",title:"权限码",width:100},
+			{field:"grantName",title:"权限名",width:100},
+			{field:"grantPath",title:"权限path",width:100},
+			{field :"ck",checkbox : 'true',fixed:true},
+
+	      ]],
+			onLoadSuccess:function(data){                   
+				if (data) {
+					$.each(data.rows, function(index, item) {
+						
+						for(var i=0;i<grant.length;i++){
+						console.log(grant[i].grantCode);
+			        			if(item.grantCode == grant[i].grantCode){
+										$('#tbl_assign').datagrid('checkRow', index);
+				
+									}
+      					}
+						
+
+					});
+
+				}
+
+			}      
+	    });
+		
+	});
+	
+	$("#btn_save").click(function(){
+		var rowUser=$("#tbl_company").datagrid("getSelected");
+		var checkedItems = $('#tbl_assign').datagrid('getChecked');	
+		var names = [];
+		var grantCodes="";
+			$.each(checkedItems, function(index, item){			
+			//names.push(item.grantCode);		
+			grantCodes += "'" + item.grantCode + "',";
+			});  
+			
+	    if(grantCodes!=""){
+	    	grantCodes=grantCodes.substr(0,grantCodes.length-1);
+	    }
+			console.log(rowUser.userId);
+			console.log(grantCodes);	             			
+		
+   	//	$("#dlg_assign").dialog("close");
+			var url=path+"/sysgrantcontrol/updSysGrantControl";
+			
+			$.post(url,{"grandCode":grantCodes,"userId":rowUser.userId},function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					
+				}else{
+					$.messager.alert("提示","shibai","info");
+				}
+			});
+		
+		
+ 	 });
+	
+	//关闭
+	$("#btn_close").click(function(){
+		
+   	$("#dlg_assign").dialog("close");
+  });
+	
+	$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_company').datagrid('load',queryParams);
+    });
+
+
+  
+
+	
+
+	function company(){
+		var url=path+"/sysgrantcontrol/getSysGrantControlByCon";
+	    $("#tbl_company").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+            pagePosition:"bottom",
+            pagination:true,
+            pageSize:10,
+            pageList:[10,20,50],
+            pageNumber:1,
+	    	columns:[[
+			{field:"phoneNum",title:"用户账号",width:100},
+			{field:"userRole",title:"用户角色",width:100}
+	      ]]
+	    })
+	}
+})

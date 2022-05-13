@@ -1,0 +1,56 @@
+package edu.hfu.broadcast.dao.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+@Repository
+public class SystemDao {
+	@Resource
+	private BaseDaoImpl dao;
+	
+	//获取全部
+	public List<SysPlatInformation> getAllSysPlatInformation(SysPlatInformation system) throws Exception {
+		String hql = "from SysPlatInformation";
+		return dao.find(hql);
+	}
+	
+	//修改
+	public void updSysPlatInformation(SysPlatInformation system) throws Exception {
+		dao.update(system);
+	}
+	
+	//根据Id查询
+		public SysPlatInformation GetSysPlatInformationById(SysPlatInformation system) throws Exception {
+			String hql = "from SysPlatInformation where platformId = " + system.getPlatformId();
+			return (SysPlatInformation) dao.find(hql).get(0);
+		}
+
+		//获取用户
+		public List<SysUser> getUser(SysUser plat) throws Exception {
+			// TODO Auto-generated method stub
+			String hql="from SysUser where userId='"+plat.getUserId()+"'";
+			return dao.find(hql);
+		}
+
+		public void chgPassword(SysUser platForPassword) throws Exception {
+			// TODO Auto-generated method stub
+			dao.update(platForPassword);
+			
+		}
+
+		public List<SysPlatInformation> getPlatInfomation(Integer userId) throws Exception {
+			// TODO Auto-generated method stub
+			String hql="from SysPlatInformation where user='"+userId+"'";
+			return  dao.find(hql);
+			
+		}
+		
+		
+}

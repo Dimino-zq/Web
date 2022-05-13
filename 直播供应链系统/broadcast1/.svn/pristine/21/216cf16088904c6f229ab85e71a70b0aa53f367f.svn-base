@@ -1,0 +1,109 @@
+package edu.hfu.broadcast.dao.sysset;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+
+@Repository
+public class SysCompanyDao {
+	@Resource
+	private BaseDaoImpl dao;
+	
+	public List<SysCompany> getAllSysCompany() throws Exception {
+		String hql = "from SysCompany";
+		return dao.find(hql);
+	}
+	
+	//查询
+	public List<SysCompany> getSysCompanyByCon(SysCompany sysCompa) throws Exception {
+		String hql = "from SysCompany ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != sysCompa) {
+			if (null != sysCompa.getComName() && !"".equals(sysCompa.getComName())) {
+				hql += (index == 0 ? "where" : "and") + "  comName=?" + index++;
+				params.add(sysCompa.getComName());
+			}
+		}
+		hql += " order by companyId";
+		return dao.find(hql, params.toArray());
+	}
+
+	public List<SysCompany> getSysCompanyByConForImport(SysCompany sysCompa) throws Exception {
+		String hql = "from SysCompany ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != sysCompa) {
+			if (null != sysCompa.getComName() && !"".equals(sysCompa.getComName())) {
+				hql += (index == 0 ? "where" : "and") + "  comName=?" + index++;
+				params.add(sysCompa.getComName());
+			}
+		}
+		hql += " order by companyId";
+		return dao.find(hql, params.toArray());
+	}
+
+	public List<SysCompany> getSysCompanyByCon(SysCompany sysCompa, int pageNo, int pageSize) throws Exception {
+		String hql = "from SysCompany ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != sysCompa) {
+			if (null != sysCompa.getComName() && !"".equals(sysCompa.getComName())) {
+				hql += (index == 0 ? "where" : "and") + "  comName=?" + index++;
+				params.add(sysCompa.getComName());
+			}	
+		}
+		hql += " order by companyId";
+		return dao.findByPage(hql, params.toArray(), pageNo, pageSize);
+	}
+
+	public Integer getSysCompanyCountByCon(SysCompany sysCompa) throws Exception {
+		String hql = "from SysCompany ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != sysCompa) {
+			if (null != sysCompa.getComName() && !"".equals(sysCompa.getComName())) {
+				hql += (index == 0 ? "where" : "and") + "  comName=?" + index++;
+				params.add(sysCompa.getComName());
+			}	
+		}
+		hql += " order by companyId";
+		return dao.queryBeanCountByHql(hql, params.toArray());
+	}
+	
+	//增加
+	public void saveSysCompany(SysCompany sysCompa) throws Exception {
+
+		dao.save(sysCompa);
+
+	}
+	
+	//增加
+		public void saveSysUser(SysUser sysuser) throws Exception {
+
+			dao.save(sysuser);
+
+		}
+	//修改
+	public void updSysCompany(SysCompany sysCompa) throws Exception {
+		dao.update(sysCompa);
+	}
+	//删除
+	public void deleteSysCompany(SysCompany sysCompa) throws Exception {
+		String hql = "delete SysCompany where companyId=?0";
+		dao.bulkUpdate(hql, sysCompa.getCompanyId());
+	}
+	//根据Id查询
+	public SysCompany GetSysCompanyById(SysCompany sysCompa) throws Exception {
+		String hql = "from SysCompany where CompanyId = " + sysCompa.getCompanyId();
+		return (SysCompany) dao.find(hql).get(0);
+	}
+}

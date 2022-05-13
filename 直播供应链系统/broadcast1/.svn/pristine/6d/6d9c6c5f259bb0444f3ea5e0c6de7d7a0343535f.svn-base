@@ -1,0 +1,169 @@
+package edu.hfu.broadcast.action.anchor;
+
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.service.anchor.anchorInformService;
+
+
+@RestController
+@RequestMapping(value = "/anchorInform")
+public class AnchorInformAction {
+	private final Logger LOG = LoggerFactory.getLogger(AnchorInformAction.class);
+
+	@Resource
+	anchorInformService anchorservice; 
+	
+	@RequestMapping(value = "/gotoAnchorInform", method = { RequestMethod.GET, RequestMethod.POST })
+	@PreAuthorize("hasRole('ROLE_2')")
+	public ModelAndView gotoAnchor(HttpSession session) {
+		ModelAndView mod = new ModelAndView("anchor/anchorInform.btl");
+		Object user = session.getAttribute("user");
+		if(null == user)
+			throw new RuntimeException("查询失败：未登录状态！");
+		else if(!"2".equals(session.getAttribute("userType")))
+			throw new RuntimeException("查询失败：用户类型不匹配！");
+		AnchorInformation anchor = (AnchorInformation) session.getAttribute("anchor");
+		try {
+			AnchorInformation anchorInfo = anchorservice.getAnchorById(anchor);
+			if(null == anchorInfo)
+				throw new RuntimeException("查询失败：主播信息不存在！");
+			mod.addObject("anchorId",anchorInfo.getAnchorId());//id
+			mod.addObject("anchorName",anchorInfo.getAnchorName());//主播姓名
+			mod.addObject("anchorSex",anchorInfo.getAnchorSex());//主播性别
+			mod.addObject("phone",anchorInfo.getPhone());// 联系方式
+			mod.addObject("anchorPlatform",anchorInfo.getAnchorPlatform()); // 主播带货平台
+			mod.addObject("fans",anchorInfo.getFans());// 粉丝数
+			mod.addObject("pitFee",anchorInfo.getPitFee());// 坑位数
+			mod.addObject("commission",anchorInfo.getCommission());// 近90日销售额
+			mod.addObject("service",anchorInfo.getService());// 直播间id
+			mod.addObject("ninetySale",anchorInfo.getNinetySale());// 近90日销售额
+			mod.addObject("roomId",anchorInfo.getRoomId());// 直播间id
+			mod.addObject("birthDay",anchorInfo.getBirthDay());// 生日
+			mod.addObject("workTime",anchorInfo.getWorkTime());// 主播时间段
+			mod.addObject("businessAmount",anchorInfo.getBusinessAmount());// 招商计划数
+			mod.addObject("onlinePhoto",anchorInfo.getOnlinePhoto());// 头像
+			mod.addObject("thirtyWorkTimes",anchorInfo.getThirtyWorkTimes());// 30日直播次数
+			mod.addObject("investedInformation",anchorInfo.getInvestedInformation());// 招商信息
+			mod.addObject("perCustomerPrice",anchorInfo.getPerCustomerPrice());// 客单价
+			mod.addObject("saleCategory",anchorInfo.getSaleCategory());// 产品销售类别
+		} catch (RuntimeException e) {
+			LOG.debug("{}",e.getMessage());
+			mod.addObject("error", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mod;
+	}
+	
+	//修改信息
+	@RequestMapping(value = "/updAnchorInformation", method = { RequestMethod.GET, RequestMethod.POST })
+	@PreAuthorize("hasPermission('/updAnchorInformation','02-01-001')")
+	public Map<String, String> updAnchorInformation(HttpSession session, AnchorInformation anchorinform) {
+    	Map<String,String> mess = new HashMap<String, String>();
+    	//从session中获取当前登录用户的信息
+    	Object updUser = session.getAttribute("user");
+		try {
+			if(null == updUser)
+				throw new RuntimeException("修改失败：未登录状态！");
+			else if(!"2".equals(session.getAttribute("userType")))
+				throw new RuntimeException("修改失败：用户类型不匹配！");
+			else if(null == anchorinform || null == anchorinform.getAnchorId())
+				throw new RuntimeException("修改失败：数据缺失！");
+			else
+				mess.put("tip", anchorservice.updAnchorInformation(anchorinform, ((SysUser) updUser).getPhoneNum()));		//目前用户名即为电话号码
+		} catch (RuntimeException e) {
+			LOG.debug("{}",e.getMessage());
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+	}
+			
+	//修改密码
+	@RequestMapping(value = "/updAnchorInformationPassword", method = { RequestMethod.GET, RequestMethod.POST })
+	@PreAuthorize("hasPermission('/updAnchorInformationPassword','02-01-002')")
+	public Map<String, String> chgPassword(HttpSession session, String newpassword, String oldpassword) {
+    	Map<String,String> mess = new HashMap<String, String>();
+    	//从session中获取当前登录用户的信息
+    	Object user = session.getAttribute("user");
+		try {
+			if(null == user)
+				throw new RuntimeException("修改失败：未登录状态！");
+			else if(!"2".equals(session.getAttribute("userType")))
+				throw new RuntimeException("修改失败：用户类型不匹配！");
+			else if(null == oldpassword || "".equals(oldpassword))
+				throw new RuntimeException("修改失败：请输入原密码！");
+			else if(null == newpassword || "".equals(newpassword))
+				throw new RuntimeException("修改失败：请输入新密码！");
+			else
+			{
+				mess.put("tip", anchorservice.chgPassword((SysUser) user, newpassword, oldpassword));		//目前用户名即为电话号码
+			}
+		} catch (RuntimeException e) {
+			LOG.debug("{}",e.getMessage());
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+	}		
+			
+	//保存头像图片
+	@RequestMapping(value = "/saveimg", method = { RequestMethod.GET, RequestMethod.POST })
+	@PreAuthorize("hasPermission('/saveimg','02-01-003')")
+	public Map<String, String> saveimg(MultipartFile imgfile, HttpSession session) throws Exception {
+		Map<String, String> mess = new HashMap<String, String>() ;
+    	Object user = session.getAttribute("user");
+		try {
+			if(null == user)
+				throw new RuntimeException("修改失败：未登录状态！");
+			else if(!"2".equals(session.getAttribute("userType")))
+				throw new RuntimeException("修改失败：用户类型不匹配！");
+			else if(null == imgfile)
+				throw new RuntimeException("修改失败：数据丢失！");
+			else
+			{
+				// 根据文件名称检查文件是否为.jpg格式图片
+				if (!Objects.requireNonNull(imgfile.getOriginalFilename()).endsWith(".jpg")) {
+					throw new RuntimeException("上传失败:文件类型错误，请上传.jpg格式的图片！");
+				}
+				// 检查附件大小是否过大
+				else if (imgfile.getSize() > 1024 * 1024 * 1) {
+					throw new RuntimeException("上传失败:超出上传上限1M!");
+				} else {
+					Base64 base64 = new Base64();
+					String encodedText = base64.encodeToString(imgfile.getBytes());
+					AnchorInformation anchor = (AnchorInformation) session.getAttribute("anchor");
+					mess.put("tip", anchorservice.updPhoto(anchor, encodedText, ((SysUser) user).getPhoneNum()));		//目前用户名即为电话号码
+				}
+			}
+		} catch (RuntimeException e) {
+			LOG.debug("{}",e.getMessage());
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+	}
+	
+}

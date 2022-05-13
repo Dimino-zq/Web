@@ -1,0 +1,68 @@
+package edu.hfu.broadcast.service.sysset;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.dao.sysset.SysCompanyDao;
+
+@Service
+@Transactional
+public class SysCompanyService {
+	@Resource
+	SysCompanyDao syscompanydao;
+	public List<SysCompany> getAllSysCompany() throws Exception {
+		return syscompanydao.getAllSysCompany();
+	}
+	
+	//查询
+	public List<SysCompany> getSysCompanyByCon(SysCompany sysCompa) throws Exception {
+		return syscompanydao.getSysCompanyByCon(sysCompa);
+	}
+
+	public List<SysCompany> getSysCompanyByConForImport(SysCompany sysCompa) throws Exception {
+
+		return syscompanydao.getSysCompanyByConForImport(sysCompa);
+	}
+
+	public List<SysCompany> getSysCompanyByCon(SysCompany sysCompa, int pageNo, int pageSize) throws Exception {
+		return syscompanydao.getSysCompanyByCon(sysCompa, pageNo, pageSize);
+	}
+
+	public Integer getSysCompanyCountByCon(SysCompany sysCompa) throws Exception {
+		return syscompanydao.getSysCompanyCountByCon(sysCompa);
+	}
+	
+	//增加
+	public String saveSysCompanyByHand(SysCompany sysCompa) throws Exception {
+		// TODO Auto-generated method stub
+		sysCompa.setCreateDate(new Date());
+		sysCompa.setUpdDate(new Date());
+		syscompanydao.saveSysCompany(sysCompa);
+		return "succ";
+	}
+	//修改
+	public String updSysCompany(SysCompany sysCompa) throws Exception {
+		SysCompany com = syscompanydao.GetSysCompanyById(sysCompa);
+		com.setComPhone(sysCompa.getComPhone());
+		com.setComStartTime(sysCompa.getComStartTime());
+		com.setComeail(sysCompa.getComeail());
+		com.setComBusiness(sysCompa.getComBusiness());
+		com.setComAddress(sysCompa.getComAddress());
+		com.setComProfile(sysCompa.getComProfile());
+		com.setComName(sysCompa.getComName());
+		com.setComContacts(sysCompa.getComContacts());
+		com.setBusinessRange(sysCompa.getBusinessRange());
+		syscompanydao.updSysCompany(com);
+		return "succ";
+	}
+	//删除
+	public void deleteLession(SysCompany sysCompa) throws Exception {
+		syscompanydao.deleteSysCompany(sysCompa);
+	}
+}

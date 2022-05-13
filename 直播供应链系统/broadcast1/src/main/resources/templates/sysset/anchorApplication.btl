@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/AnchorApplication.js"></script>
+		<title>主播信息</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+	
+		<div data-options="region:'north',minHeight:37,border:false">
+	    	<% if(hasPermission('03-05-001')) {%>
+	    	<div>
+	    	<form id="form_query">
+	        	<table style="margin-top:1px;margin-left:15px">
+	            	<tr>
+	                	<td>主播姓名：</td>
+	                	<td><input class="easyui-textbox" name="anchorName" style="width:150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	                	<td>商品类别：</td>
+	                	<td><input class="easyui-textbox" name="businessCategory" style="width:150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	                	<td>状态：</td>
+						<td>
+							<select class="easyui-combobox" name="status" style="width:150px;" data-options="editable:false">
+							    <option value="未处理">未处理</option>
+							    <option value="已同意">已同意</option>
+							    <option value="已拒绝">已拒绝</option>
+							    <option value="">全部</option>
+							</select>
+	                	</td>
+	       			</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a id="btn_query" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></span>
+	    		</table>
+	    	</form>
+	    	</div>
+	    	 <% }%>
+	    </div>
+	    
+		<div data-options="region:'south',border:'false',minHeight:40"  >
+			<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+		        <% if(hasPermission('03-05-002')) {%>
+		        <a id="btn_updDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">处理申请</a>
+				 <% }%>
+			</div>
+		</div>
+		
+		<div data-options="region:'center'" style="border-width: 0;">
+			<table id="tbl_anchorApplication"></table>
+		</div>
+		
+		<div id="dialog_anchorApplication" title="申请审批" class="easyui-dialog" style="width: 830px; height: 518px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,buttons:'#buttons_anchor',closable:false,constrain:true">
+			<div style="height: 24%;">
+		        <form id="form_anchorApplication">
+		            <table style="padding-left: 10px;padding-top: 5px;padding-bottom: 5px;">
+						<tr style="height:35px;">
+	          				<td style="text-align: right;">申请类目：</td><input type="hidden" id="input_anchorId" name="anchorId">
+	          				<td style="width:170px"><input class="easyui-textbox" id="txt_thirdCategory" name="thirdCategory" style="width:150px;" data-options="readonly:true,required:true,missingMessage:'必填'"></td>
+	          				<td style="text-align: right;">预期佣金：</td>
+	          				<td style="width:130px"><input class="easyui-textbox" id="txt_commission" style="width:110px;" data-options="readonly:true,required:true,missingMessage:'必填'"></td>
+	          				<td style="text-align: right;">预期服务费：</td>
+	          				<td style="width:130px"><input class="easyui-textbox" id="txt_service" style="width:110px;" data-options="readonly:true,required:true,missingMessage:'必填'"></td>
+        				</tr>
+        				<tr>
+	        				<td style="text-align: right;">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</td>
+	          				<td style="width:576px" colspan="5"><input class="easyui-textbox" id="txt_memo" style="width:576px;height:50px;" data-options="multiline:true,readonly:true,required:true,missingMessage:'必填'"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<table id="tab_mag" style="height: 76%;"></table>
+		</div>
+		
+		<div id="buttons_anchor">
+			<a id="btn_agree" href="#" class="easyui-linkbutton" style="width: 80px;">确&nbsp;&nbsp;定</a>
+			<a id="btn_disagree" href="#" class="easyui-linkbutton" style="width: 80px;">拒&nbsp;&nbsp;绝</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+		
+		<div id="dialog_refuse" title="拒绝申请" class="easyui-dialog" style="width: 320px; height: 260px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,buttons:'#buttons_refuse',closable:false,constrain:true">
+			<table>
+				<tr>
+					<td style="font-size: 17px; padding-top: 5px; padding-left: 15px;">请输入拒绝的理由：</td>
+				</tr>
+				<tr>
+	          		<td style="padding-top: 5px; padding-left: 15px;"><input class="easyui-textbox" id="txt_reason" name="reason" style="width:270px;height: 120px;" data-options="multiline:true,required:true,missingMessage:'必填'"></td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="buttons_refuse">
+			
+			<a id="btn_yes" href="#" class="easyui-linkbutton" style="width: 80px;">确&nbsp;&nbsp;定</a>
+			<a id="btn_no" href="#" class="easyui-linkbutton" style="width: 80px;">取&nbsp;&nbsp;消</a>
+		</div>
+	</body>
+
+</html>
+

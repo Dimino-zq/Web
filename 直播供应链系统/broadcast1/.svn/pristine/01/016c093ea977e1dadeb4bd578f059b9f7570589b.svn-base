@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/sysGrantControl.js"></script>
+		<title>企业信息</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+		<div  data-options="region:'north',minHeight:40" style="border-bottom-width: 1px; margin-bottom:1px;">
+			<form id="form_query" >
+				<table style="margin-top:1px;margin-left:15px">
+					<tr>
+						<td>企业名称：<input class="easyui-textbox" name="comName" style="width: 150px;"></td>
+					</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></span>
+				</table>
+			</form>
+		</div>
+		
+		<div  data-options="region:'center'" style="border-width: 0;">
+			<table id="tbl_company"></table>
+		</div>
+		
+		<div data-options="region:'south',border:'false',minHeight:40">
+			<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+						<a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-add'">增加</a>
+						<a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-edit'">修改</a>
+						<a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>
+			</div>
+		</div>	
+		
+		<div title="新增企业" class="easyui-dialog" id="dlg_company" style="width: 550px; height: 500px;" data-options="resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+			<div style="width:100%;margin-top: 10px;">
+				<form id="form_company">
+					<table style="text-align: center;margin-left: auto;margin-right: auto;padding-top:10px">
+						<tr style="height: 40px">
+							<td style="text-align: right;">企业名称:<input type="hidden" id="txt_companyId" name="companyId"></td>
+							<td colspan="3"><input class="easyui-textbox" id="txt_comName" name="comName"   style="width:400px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px;">
+							<td style="text-align: right;">联系人:</td>
+							<td><input class="easyui-textbox" id="txt_comContacts" name="comContacts" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right;">企业联系方式:</td>
+							<td><input class="easyui-textbox" id="txt_comPhone" name="comPhone"   style="width:150px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'默认密码为123456'"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;">注册时间:</td>
+							<td ><input class="easyui-datebox" id="txt_comStartTime" name="comStartTime" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right;">企业邮箱:</td>
+							<td style="width:160px"><input class="easyui-textbox" id="txt_comeail" name="comeail" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;">营业执照号:</td>
+							<td colspan="3"><input class="easyui-textbox" id="txt_comBusiness" name="comBusiness"   style="width:400px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;">经营范围:</td>
+							<td colspan="3"><input class="easyui-textbox" id="txt_businessRange" name="businessRange" style="width:400px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;">企业地址:</td>
+							<td colspan="3"><input class="easyui-textbox" id="txt_comAddress" name="comAddress"   style="width:400px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;">企业简介:</td>
+							<td colspan="3"><input class="easyui-textbox" id="txt_comProfile" name="comProfile"   style="width:400px;height:100px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',multiline:true"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;"></td>
+							<td colspan="3">注：登录账号为手机号，默认密码为123456</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div id="div_buttons">
+		        <a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+		        <a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+	</body>
+</html>

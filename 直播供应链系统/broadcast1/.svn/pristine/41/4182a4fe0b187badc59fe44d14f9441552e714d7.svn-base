@@ -1,0 +1,306 @@
+/**
+ * 
+ */
+$(document).ready(function() {
+	var path = getRootPath();
+	merchkind();
+	initCombobox();
+
+	//查询
+	$("#btn_query").click(function() {
+		var queryParams = $('#form_query').serializeJSON();
+		$('#tbl_merchKind').datagrid('load', queryParams);
+	});
+
+	//点击增加--对话框打开
+	$("#btn_addDlg").click(function() {
+		$("#dlg_merchKind").dialog("open");
+	});
+
+	//点击增加对话框中关闭--关闭
+	$("#btn_close").click(function() {
+		clearForm();
+		$("#dlg_merchKind").dialog("close");
+	});
+
+	//增加
+	$("#btn_save").click(function() {
+		var comName = $("#txt_KindName").textbox("getValue");
+
+		if (comName == "") {
+			$.messager.alert("提示", "请输入商品类别名称!", "info");
+			$("#txt_KindName").next("span").find("input[type='text']").focus();
+			return false;
+		}
+
+		var level = $("#com_level").combobox("getValue");
+		if (level == "") {
+			$.messager.alert("提示", "请选择商品等级!", "info");
+			return false;
+		}
+
+		var categoryId = $("#txt_merchKindId").val();
+		if (categoryId == "") {
+			var url = path + "/merchkind/saveCommCategories";
+			var postData = $('#form_merchKind').serializeJSON();
+			console.log(postData);
+			$.post(url, postData, function(data) {
+				if (data == "succ") {
+					$.messager.alert("提示", "增加成功", "info")
+					$("#dlg_merchKind").dialog("close");
+					//$("#btn_query").click();
+					clearForm();
+				} else {
+					$.messager.alert("提示", "增加失败，请更改后重试", "info");
+				}
+			});
+		} else {
+			var url = path + "/merchkind/updCommCategories";
+			var postData = $('#form_merchKind').serializeJSON();
+			$.post(url, postData, function(data) {
+				if (data == "succ") {
+					$.messager.alert("提示", "修改成功", "info");
+					$("#dlg_merchKind").dialog("close");
+					//$("#btn_query").click();
+					clearForm();
+				} else {
+					$.messager.alert("提示", "修改失败", "info");
+				}
+			});
+		}
+	});
+	//点击修改
+	$("#btn_updDlg").click(function() {
+		var row = $('#tbl_merchKind').datagrid("getSelected");
+
+		if (row == null) {
+			$.messager.alert("提示", "请选中要修改的行", "info");
+			return false;
+		} else {
+			$("#txt_merchKindId").val(row.categoryId);
+			$("#txt_KindName").textbox("setValue", row.categoryName);
+			$("#com_level").combobox("setValue", row.categorylevel);
+			$("#txt_merchKind").textbox("setValue", row.parent);
+			if (null != row.parent)
+				$("#txt_merchKind").combobox("setValue", row.parent.categoryName);
+			else
+				$("#txt_merchKind").combobox("setValue", null);
+			$('#dlg_merchKind').dialog('setTitle', '修改商品类别信息');
+			$("#txt_updDate").datebox("setValue", row.updDate);
+			$("#dlg_merchKind").dialog("open");
+		}
+	});
+	//删除
+	$("#btn_delDlg").click(function() {
+		var row = $("#tbl_merchKind").datagrid("getSelected");
+		if (null != row) {
+			var categoryId = row.categoryId;
+			var postData = {
+				"categoryId": categoryId
+			};
+			$.post((path + "/merchkind/deleteCommCategories"), postData, function(data) {
+				if ("deletesuccess" == data) {
+					$.messager.alert("提示", "删除成功！", "info");
+					merchkind()
+
+				} else {
+					$.messager.alert("提示", "删除失败!", "info");
+				}
+
+			});
+		} else {
+			$.messager.alert("提示", "请选中一行！", "info");
+			return false;
+		}
+	});
+
+
+
+	function clearForm() {
+		$("#txt_merchKindId").val(null);
+		$("#txt_KindName").textbox("clear");
+		$("#txt_merFchKind").combobox("setValue", null);
+		$("#com_level").combobox("reset");
+	}
+
+	//初始化表单
+	var fatherinternalTimer;
+	
+	function merchkind() {
+		var url = path + "/merchkind/getCommCategoriesByCon";
+		$("#tbl_merchKind").datagrid({
+			loadMsg: "加载数据中......",
+			url: url,
+			border: false,
+			striped: true,
+			fit: true,
+			rownumbers: true,
+			autoRowHeight: false,
+			singleSelect: true,
+			fitColumns: true,
+			pagePosition: "bottom",
+			pagination: true,
+			pageSize: 15,
+			pageList: [15, 25, 55],
+			pageNumber: 1,
+			columns: [
+				[{
+						field: "categoryName",
+						title: "类别名称",
+						width: 100
+					},
+					{
+						field: "categorylevel",
+						title: "类别等级",
+						width: 100
+					},
+					{
+						field: "parent",
+						title: "上级类别",
+						width: 100,
+						formatter: function(value, row, index) {
+							if (row.parent) {
+								return row.parent.categoryName;
+							} else {
+								return "";
+							}
+						},
+					}
+				]],
+			view: detailview,
+	        detailFormatter: function (index, yeyerow) {   //用以初始化并返回一个DIV容器
+	            return '<div style="padding:2px"><table class="' + yeyerow.categoryId + 'ddv"></table></div>';
+	        },  
+			onExpandRow: function (index, yeyerow) {     //展开后触发事件
+	            $('.' + yeyerow.categoryId + 'ddv').datagrid({
+	            	url: path + "/merchkind/getparent",
+	                fitColumns: true,
+	                rownumbers: true,
+	                remoteSort:false,
+	                sortOrder : 'desc',
+	                loadMsg: '加载中...',
+	                height: 'auto',
+	                queryParams:{"categoryId":yeyerow.categoryId},
+	                columns:[[
+	                                  {
+						field: "categoryName",
+						title: "类别名称",
+						width: 100
+					},
+					{
+						field: "categorylevel",
+						title: "类别等级",
+						width: 100
+					},
+					]],
+	               onResize: function () {   //事件会在窗口或框架被调整大小时发生
+	                    $.each($('#tbl_merchKind').datagrid('getRows'), function (i, row) {
+	                        $('#tbl_merchKind').datagrid('fixRowHeight', i);
+	                    });
+	                    $('#tbl_merchKind').datagrid('fixDetailRowHeight', index);
+	                },	                
+	    	        onClickRow:function(index,row){     	        	  	        	
+	    	        	var rowa = $('.' + yeyerow.categoryId + 'ddv').datagrid("getSelected");
+	    	        	var indexa=$('.' + yeyerow.categoryId + 'ddv').datagrid('getRowIndex',rowa);
+	    	        	/*console.log(rowa);
+	    	        	console.log(indexa);
+	    	        	console.log(index);*/	    	        	
+	    	        	if(indexa != (-1)){
+	    	        		$('.' + yeyerow.categoryId + 'ddv').datagrid("unselectAll");
+	    	        		$('.' + yeyerow.categoryId + 'ddv').datagrid("selectRow",index);
+	    	        	}else{
+	    	        		$('.' + yeyerow.categoryId + 'ddv').datagrid("unselectAll");	    	        		
+	    	        	}    		    	        	    	        	
+	    	        },
+	                onLoadSuccess: function () {   //当数据载入成功时触发
+	                	
+	                    clearTimeout(fatherinternalTimer);
+	                    fatherinternalTimer =
+	                    setInterval(function () {
+	                        $.each($('#tbl_merchKind').datagrid('getRows'), function (i, row) {
+	                            $('#tbl_merchKind').datagrid('fixRowHeight', i);
+	                        });
+	                        $('#tbl_merchKind').datagrid('fixDetailRowHeight', index);
+	                    }, 10);
+	                }
+		})
+	}
+	})
+	}
+	
+               
+		                  
+	
+	//初始化各个下拉列表框数据
+	function initCombobox() {
+		//部门等级下拉列表框数据初始化
+		$("#com_level").combobox({
+			value: 1,
+			editable: false,
+			valueField: 'value',
+			textField: 'label',
+			data: [{
+				label: '一级类别',
+				value: 1
+			}, {
+				label: '二级类别',
+				value: 2
+			}, {
+				label: '三级类别',
+				value: 3
+			}],
+
+			onSelect: function(record) {
+				console.log(record);
+				console.log(record.value);
+				console.log(record.value - 1);
+				var param = record.value - 1;
+				//仅当部门等级为2时上级部门才可以选择
+				if (1 == record.value) {
+					$("#txt_merFchKind").combobox({
+
+						disabled: true,
+					})
+				} else {
+
+					$("#txt_merFchKind").combobox({
+						valueField: 'categoryId',
+						textField: 'categoryName',
+						url: path + '/merchkind/getparent',
+						disabled: false,
+						queryParams: {
+							"categorylevel": param
+						}
+					});
+				}
+
+
+
+
+
+			}
+		});
+	}
+	/*	
+	    //(查询栏)获取上级部门下拉列表框数据
+		$("#txt_merFchKind").combobox({
+			value:null,
+			limitToList:true,
+	    	valueField:'categoryId',
+	    	textField:'categoryName',
+	    	url:path+'/merchkind/getSuperName',
+	    	onLoadSuccess:function(){
+	    		var data1 = $("#txt_merFchKind").combobox("getData");
+	    		//上级部门下拉列表框数据初始化
+	    	    $("#txt_merFchKind").combobox({
+	    	    	valueField:'categoryId',
+	    	    	textField:'categoryName',
+	    	    	data:data1
+	    	    });
+	    	}
+	    });
+		
+	
+	}*/
+
+})

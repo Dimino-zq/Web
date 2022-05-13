@@ -1,0 +1,85 @@
+package edu.hfu.broadcast.bean;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/*主播信息表*/
+@SuppressWarnings("serial")
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = false)
+public class AnchorInformation extends SysBaseTable{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
+	private Integer anchorId; // 主播编号
+	@Column(length = 20)
+	private String anchorName; // 主播姓名
+	@Column(length = 5)
+	private String anchorSex; // 性别
+	@Column(length = 20)
+	private String phone; // 联系方式
+	@Column(length = 20)
+	private String anchorPlatform; // 主播带货平台
+	@Column(length = 20)
+	private String fans; // 粉丝数
+	@Column(length = 20)
+	private String pitFee; // 坑位数
+	//
+	@Column(length = 10)
+	private String commission; // 佣金
+	@Column(length = 10)
+	private String service; // 服务费
+	//
+	@Column(length = 20)
+	private String ninetySale; // 近90日销售额
+	@Column(length = 20)
+	private String roomId; // 直播间id
+	@Column(length = 20)
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	private Date birthDay; // 生日
+	@Column(length = 20)
+	private String workTime; // 主播时间段
+	@Column(length = 20)
+	private String businessAmount; // 招商计划数
+	@Column(columnDefinition = "text")
+	private String onlinePhoto; // 头像
+	@Column(length = 20)
+	private String thirtyWorkTimes; // 30日直播次数
+	@Column(length = 20)
+	private String investedInformation; // 招商信息
+	@Column(length = 20)
+	private String perCustomerPrice; // 客单价
+	@Column(length = 20)
+	private String saleCategory; // 产品销售类别
+	
+	//注意此处的级联操作，包括级联增加、删除和修改用户表信息
+	//无法使用懒加载，提示no Session，暂时没有解决方案
+	@OneToOne(fetch=FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST})
+	@JoinColumn(name = "userId")
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+	private SysUser user;
+	
+	//注意此处的级联操作，包括级联删除主播申请表信息
+	@OneToMany(mappedBy = "anchorInformation",fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE})
+	@JsonIgnore
+	private List<AnchorApplication> application;
+}

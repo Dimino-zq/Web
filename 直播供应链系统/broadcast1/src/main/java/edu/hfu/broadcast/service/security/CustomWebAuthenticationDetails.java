@@ -1,0 +1,51 @@
+package edu.hfu.broadcast.service.security;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
+import edu.hfu.broadcast.action.LoginIndexAction;
+
+public class CustomWebAuthenticationDetails extends WebAuthenticationDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6181373721596678438L;
+	private final Logger LOG = LoggerFactory.getLogger(LoginIndexAction.class);
+	private final String userVerCode;
+	private String errorMsg;
+	public CustomWebAuthenticationDetails(HttpServletRequest request) {
+		super(request);
+		userVerCode=request.getParameter("userVerCode");
+		if(null!=userVerCode) {
+			HttpSession session=request.getSession();
+			String index_code=String.valueOf(session.getAttribute("index_code"));
+			LOG.debug("CustomWebAuthenticationDetails index_code:"+index_code);
+			LOG.debug("CustomWebAuthenticationDetails userVerCode:"+userVerCode);
+			if (!userVerCode.equalsIgnoreCase(index_code)) {
+				errorMsg="验证码输入有误!";				
+			}
+		}else {
+			errorMsg="请输入验证码!";	
+		}
+	}
+
+	public String getUserVerCode() {
+		return userVerCode;
+	}
+
+	
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	@Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString()).append("; userVerCode: ").append(this.getUserVerCode());
+        return sb.toString();
+    }
+}

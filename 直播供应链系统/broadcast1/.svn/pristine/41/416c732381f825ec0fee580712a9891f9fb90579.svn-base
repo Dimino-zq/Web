@@ -1,0 +1,172 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	
+	clearForm();
+	
+	initTable();
+	
+	//点击提交查询信息
+	$("#btn_query").click(function(){
+		var queryParams=$('#form_query').serializeJSON();
+	    $('#tbl_anchorApplication').datagrid('load',queryParams);
+	});
+	
+	/**
+	 * 处理申请对话框
+	 */
+	//打开对话框
+	$("#btn_updDlg").click(function(){
+		openDlg();
+	})
+	
+	//点击保存按钮
+	var clickTimes = 0;  //判断点击次数寄存
+	$("#btn_agree").click(function(){
+		//此处操作是为了防止多次点击导致多次执行函数
+		clickTimes++;
+        if(clickTimes == 1) {
+    		var postData=$("#form_anchorApplication").serializeJSON();
+    		if (postData)
+    			updateApplication(postData);
+    		else
+    			alert("postData is null!");
+    		clickTimes = 0;    //重置点击次数寄存
+        } else {
+        	return;
+        }
+	});
+	
+	//保存创建的申请表
+	function updateApplication(postData) {
+		//检查表单数据是否符合要求
+		if (checkForm(postData)) {
+			var url = path + "/anchorDistribute/saveapplication";
+			//post提交数据
+			$.post(url, postData, function (data) {
+				if(data != null && data.tip != null){
+					if(data.tip == "succ") {
+						$.messager.alert("提示", "已处理！", "info");
+						closeDlg();
+						clearForm();
+						initTable();
+					} else {
+						$.messager.alert("错误", data.tip ,"error");
+					}
+				} else {
+					$.messager.alert("错误", "未知错误！", "error");
+				}
+			});
+		} else {
+			return;
+		}
+	}
+	
+	/**
+	 * 拒绝申请
+	 */
+	//点击拒绝按钮
+	$("#btn_disagree").click(function () {
+		
+	});
+	
+	//点击关闭按钮
+	$("#btn_close").click(function(){
+		closeDlg();
+		clearForm();
+	})
+	
+	
+	//打开商品申请对话框函数
+	function openDlg(){
+		$("#dialog_anchorApplication").dialog("open");
+	}
+	
+	//关闭商品申请对话框函数
+	function closeDlg() {
+		$("#dialog_anchorApplication").dialog("close");
+	}
+	
+	//重置对话框表单函数
+	function clearForm() {
+		//
+	}
+	
+	//表单字段校验
+	function checkForm(postData)
+	{
+//		if (postData.insurance == "")
+//			$("#input_insurance").next("span").find("a").click();
+//		else if (postData.surcomjob == "")
+//			$("#input_surcomjob").next("span").find("input[type='text']").focus();
+//		else if (postData.endDate == "")
+//			$("#input_endDate").next("span").find("a").click();
+//		else
+			return true;
+//		return false;
+	}
+	
+	//初始化数据表格
+	function initTable() {
+		var url=path+"/application/getAllApplication";
+		$('#tbl_anchorApplication').datagrid({
+	        loadMsg:"加载数据中......",
+	    	url:url,
+	        border:false,
+	        striped:true,
+	        fit:true,
+	        rownumbers:true,
+	        autoRowHeight:false,
+	        singleSelect:true,
+	        fitColumns:true,
+	        pagePosition:"bottom",
+	        pagination:true,
+	        pageSize:10,
+	        pageList:[10,20,50],
+	        pageNumber:1,
+	        columns:[[
+	            {field: 'anchorName',title: '姓名',width:150,
+		        	formatter: function(value,row,index){
+		                if (row.anchorInformation){
+		                    return row.anchorInformation.anchorName;
+		                } else {
+		                    return value;
+		                }
+		            }
+	            },
+	            {field: 'anchorSex',title: '性别',width:150,
+		        	formatter: function(value,row,index){
+		                if (row.anchorInformation){
+		                    return row.anchorInformation.anchorSex;
+		                } else {
+		                    return value;
+		                }
+		            }
+	            },
+	            {field: 'phone',title: '手机号',width:150,
+		        	formatter: function(value,row,index){
+		                if (row.anchorInformation){
+		                    return row.anchorInformation.phone;
+		                } else {
+		                    return value;
+		                }
+		            }
+	            },
+	            {field: 'fans',title: '粉丝数',width:150,
+		        	formatter: function(value,row,index){
+		                if (row.anchorInformation){
+		                    return row.anchorInformation.fans;
+		                } else {
+		                    return value;
+		                }
+		            }
+	            },
+	            {field: 'businessCategory',title: '商品类目',width:150,},
+	            {field: 'commission',title: '佣金',width:150,},
+	            {field: 'service',title: '服务费',width:150,},
+	            {field: 'status',title: '状态',width:150},
+	         ]]
+		})
+	}
+
+
+})

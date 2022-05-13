@@ -1,0 +1,40 @@
+$(document).ready(function(){
+		 
+		 
+    //点击修改密码--弹出对话框
+	$("#btn_updDlg").click(function(){
+	   $("#dlg_password").dialog("open");
+	});
+	
+	//点击关闭按钮--关闭
+	$("#btn_close").click(function(){
+	   $("#dlg_password").dialog("close");
+		//clearForm();
+	  });
+	  
+	 //点击保存按钮--保存
+	$("#btn_save").click(function(){
+	   alert("密码修改成功");
+	   $("#dlg_password").dialog("close");
+
+	});
+	//点击关闭按钮--关闭
+	$("#btn_close1").click(function(){
+	   $("#dlg_system").dialog("close");
+		//clearForm();
+	  });
+	  
+	 //点击保存按钮--保存
+	$("#btn_save1").click(function(){
+	   alert("修改成功");
+	   $("#dlg_system").dialog("close");
+
+	});
+	//点击增加--弹出对话框
+	$("#btn_addDlg").click(function(){
+	   $("#dlg_system").dialog("open");
+	});
+
+
+
+})

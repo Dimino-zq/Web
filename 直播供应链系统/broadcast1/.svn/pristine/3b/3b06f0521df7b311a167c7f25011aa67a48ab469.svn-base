@@ -1,0 +1,35 @@
+/**
+ * 
+ */
+$(document).ready(function(){
+	var path=getRootPath();
+	initTable();
+	
+	
+	
+		function initTable(){
+		var url=path+"/anchorList/getAllApplication";
+		$("#tbl_anchorlist").datagrid({
+		  	loadMsg:"加载数据中......",
+	        url:url,
+	        border:false,
+	        striped:true,
+	        fit:true,
+	        rownumbers:true,
+	        autoRowHeight:false,
+	        singleSelect:true,
+	        fitColumns:true,
+	        /*pagePosition:"bottom",
+	        pagination:true,*/
+			columns:[[
+				{field:"businessCategory",title:"商品类别",width:100},
+				{field:"commission",title:"佣金",width:100},
+				{field:"service",title:"服务费",width:100},
+				{field:"memo",title:"备注",width:100},
+				{field:"status",title:"状态",width:100},
+				
+		      ]]
+		});
+	}
+	
+})

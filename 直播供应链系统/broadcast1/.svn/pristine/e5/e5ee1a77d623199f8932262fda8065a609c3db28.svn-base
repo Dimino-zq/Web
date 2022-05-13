@@ -1,0 +1,119 @@
+package edu.hfu.broadcast.action.sysset;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysGrant;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.sysset.SysGrantCodeDao;
+
+
+import edu.hfu.broadcast.service.sysset.SysGrantControlService;
+
+
+@RestController
+@RequestMapping(value = "/sysgrantcontrol")
+public class SysGrantControl {
+	private static final Logger LOG = LoggerFactory.getLogger(SysGrantControl.class);
+	@Resource
+	SysGrantControlService sysGrantControlService;
+	
+	@RequestMapping(value = "/gotoSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView gotoSysGrantControl() {
+		ModelAndView mod = new ModelAndView("sysset/sysGrantControl.btl");
+		return mod;
+	}
+	
+	//查询所有
+	@RequestMapping(value = "/getAllSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<SysUser> getAllSysGrantControl() {
+
+		try {
+			return sysGrantControlService.getAllSysGrantControl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//条件查询
+	@RequestMapping(value = "/getSysGrantControlByCon", method = { RequestMethod.GET, RequestMethod.POST })
+	public Map<String, Object> getSysGrantControlByCon(HttpSession session, SysGrant sysGrant, SysUser sysUser,int page, int rows) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+
+			List<SysCompany> ls = sysGrantControlService.getSysGrantControlByCon(sysGrant,sysUser, page, rows);
+			Integer count = sysGrantControlService.getSysGrantControlCountByCon(sysGrant,sysUser);
+			map.put("rows", ls);
+			map.put("total", count);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("total", 0);
+			map.put("rows", null);
+
+		}
+		return map;
+	}
+	
+	//增加
+	@RequestMapping(value = "/saveSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String saveSysGrantControl(SysGrant sysGrant, HttpServletRequest request) {
+		String mess = "";
+
+		try {
+			
+			HttpSession session = request.getSession();
+			mess = sysGrantControlService.saveSysGrantControl(sysGrant);
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+	
+	
+	
+	//修改
+	@RequestMapping(value = "/updSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String updSysGrantControl(HttpSession session, SysGrant sysGrant, String companyTimeVal) {
+		String mess = "";
+
+		try {
+			
+			mess = sysGrantControlService.updSysGrantControl(sysGrant);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+	//删除
+	@RequestMapping(value = "/deleteSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String deleteSysGrantControl(SysGrant sysGrant) {
+		String mess = "";
+		try {
+			sysGrantControlService.deleteSysGrantControl(sysGrant);
+			mess = "deletesuccess";
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+}

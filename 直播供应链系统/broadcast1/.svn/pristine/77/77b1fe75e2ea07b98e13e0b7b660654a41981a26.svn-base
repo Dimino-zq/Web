@@ -1,0 +1,42 @@
+package edu.hfu.broadcast.bean;
+
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/*申请表信息表*/
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = false)
+public class Application {
+	private Integer applicationId; // 申请表编号
+	@Column(length = 10)
+	private String status; // 状态
+	@Column(length = 10)
+	private String applicationContent; // 申请内容
+	@Column(length = 10)
+	private String commission; // 佣金
+	@Column(length = 10)
+	private String pitFee; // 坑位数
+	@Column(length = 10)
+	private String pitAmount; // 招商计划书
+	@Column(length = 10)
+	private String businessCategory; // 商品类别
+	@Column(length = 10)
+	private String workTime; // 直播时间段
+
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.DETACH)
+	@JoinColumn(name = "anchorId")
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+	private AnchorInformation anchorInformation;
+}
+

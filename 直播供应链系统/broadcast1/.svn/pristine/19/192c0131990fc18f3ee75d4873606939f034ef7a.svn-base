@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/anchor/anchorInform.js"></script>
+		<title>主播信息</title>
+		<style>
+			body {
+			    font-family:verdana,helvetica,arial,sans-serif;
+			    font-size:15px;
+			    margin:0;
+			}
+			.myTable{
+				width:100%;
+				border-collapse: collapse;
+			}
+			.myTable td {
+				padding: 2px;
+				border-color: #ccc;
+				border-width: 1px;
+				border-style: dotted;
+			}
+	
+		</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		
+			$("#btn").click(function(){
+				//var file =document.getElementById("onlinePhoto");
+				var file=$("#onlinePhoto").get(0);
+				var imgUrl =window.URL.createObjectURL(file.files[0]);
+				$("#pic_show").html("<img src="+imgUrl+" style=height:200px;width:200px;>");
+			});
+		
+		});
+
+
+  </script>
+	</head>
+	
+	<body>
+	
+	<div data-options="region:'south',border:'false',minHeight:40"  >
+				<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+					<a id="btn_chginformation" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改个人信息</a>
+			   		<a id="btn_chgpassword" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改个人密码</a>
+				</div>
+	</div>
+			
+	<table style="text-align: center;" class="myTable" id="tbl_staffdetail">
+				<tbody>
+						<tr rowspan="3">
+							<td rowspan="3">头像:</td>
+							<td id="uploadimg" rowspan="3" data-options="buttonText:'选择文件',accept:'.jpg'" style="width:150px;"><!-- ${onlinePhoto} --><br/>
+							<div><img id="pictureimg" alt="" ></div>
+							<a id="btn_onlinePhoto" href="#" class="easyui-linkbutton" data-options="iconCls:''">上传头像</a><br/>
+							</td>
+							<td id="td_anchorName">姓名:</td><td>${anchorName}</td>
+							<td rowspan="3" id="td_fans">粉丝数:</td>
+							<td rowspan="3" style="width: 134px">${fans}</td>
+						</tr>
+						<tr rowspan="3">
+							<td id="td_anchorSex">性别:</td><td>${anchorSex}</td>
+						</tr>
+						<tr rowspan="3">
+							<td id="td_birthDay">生日:</td><td>${birthDay}</td>
+						</tr>
+						
+						<tr>
+							<td style="height: 44px">联系方式:</td>
+							<td id="td_phone" style="height: 44px">${phone}</td>
+							<td style="height: 44px">直播平台:</td>
+							<td id="td_anchorPlatform" style="height: 44px">${anchorPlatform}</td>
+							<td style="height: 44px">房间号:</td>
+							<td id="td_roomId" style="height: 44px; width: 134px;">${roomId}</td>
+						</tr>
+						<tr>
+							
+							<td id="td_saleCategory">产品销售类别:</td>
+							<td>${saleCategory}</td>
+							
+							<td style="height: 44px">坑位数:</td>
+							<td id="td_pitFee" style="width: 261px;">${pitFee}</td>
+							<td style="height: 44px">主播时间段:</td>
+							<td id="td_workTime" style="width: 134px">${workTime}</td>
+						</tr>
+						<tr>
+							<td style="height: 33px">客单价:</td>
+							<td id="td_saleCategory" style="width: 261px; height: 37px;">
+							${perCustomerPrice}</td>
+							<td style="height: 33px">30日直播次数:</td>
+							<td id="td_thirtyWorkTimes" style="height: 37px">${thirtyWorkTimes}</td>
+							<td style="height: 33px">近90日销售额:</td>
+							<td id="td_ninetySale" style="height: 37px; width: 134px;">${ninetySale}</td>
+						</tr>
+						<tr>
+							<td style="height: 82px">招商计划数:</td>
+							<td id="td_businessAmount" colspan="5" style="height: 82px;">${businessAmount}</td>
+						</tr>
+						<tr>
+
+							<td style="height: 103px">招商信息:</td>
+							<td id="td_investedInformation" colspan="5" style="height: 103px">${investedInformation}</td>
+						</tr>
+						
+						
+					</tbody>
+			</table>
+
+			
+	<div data-options="region:'south',border:'false',minHeight:100"  >
+			<div style="width: 100%;">
+				   
+			<!-- <div>© 版权所有</div> -->
+		      <div hidden="hidden">
+		        <span type="hidden" id="txt_anchorName" >${anchorName}</span>
+		        <span type="hidden" id="txt_anchorSex" >${anchorSex}</span>
+		        <span type="hidden" id="txt_phone" >${phone}</span>
+		        <span type="hidden" id="txt_anchorPlatform" >${anchorPlatform}</span>
+		        <span type="hidden" id="txt_fans" >${fans}</span>
+		        <span type="hidden" id="txt_pitFee" >${pitFee}</span>
+		        <span type="hidden" id="txt_ninetySale" >${ninetySale}</span>
+		        <span type="hidden" id="txt_roomId" >${roomId}</span>
+		        <span type="hidden" id="txt_birthDay" >${birthDay}</span>
+		        <span type="hidden" id="txt_workTime" >${workTime}</span>
+		        <span type="hidden" id="txt_businessAmount" >${businessAmount}</span>
+		        <span type="hidden" id="txt_onlinePhoto" >${onlinePhoto}</span>
+		        <span type="hidden" id="txt_thirtyWorkTimes" >${thirtyWorkTimes}</span>
+		        <span type="hidden" id="txt_investedInformation" >${investedInformation}</span>
+		        <span type="hidden" id="txt_perCustomerPrice" >${perCustomerPrice}</span>
+		        <span type="hidden" id="txt_saleCategory" >${saleCategory}</span>
+		      </div>
+	            
+		 </div>
+ 	</div>
+
+		<div id="dialog_anchor" title="主播信息" class="easyui-dialog" style="width: 600px; height: 480px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_anchor',closable:false,constrain:true">
+			<div style="width:100%;padding-top:10px; ">
+		        <form id="form_anchor">
+		            <table align="center">
+						<!-- <tr style="height:40px;">
+						<td style="text-align: right;">预览头像:</td>
+						<td><input type="file"  id="onlinePhoto" name="myimgfile"> <br/>
+							<input type="button" id="btn" value="提交">
+							<div  style="width:300px;height:200px;" id="pic_show">
+	       						<img src=""/>
+	         				</div>
+         				</td>
+         				</tr> -->
+						<tr style="height:40px">
+							<!-- <td style="text-align: right;">主播头像:</td>
+	  						<td  style="width:160px"><input id="uploadimg" class="easyui-filebox" name="fileimg" data-options="buttonText:'选择文件',accept:'.jpg'" style="width:150px;"/></td> -->
+							<td>姓名:<input type="hidden" id="input_anchorId" name="anchorId" value="${anchorId}"></td>
+							<td style="width:160px"><input class="easyui-textbox" id="input_anchorName" name="anchorName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>性别:</td>
+							<td>
+								<input class="easyui-radiobutton" id="rdo_anchorSexboy" name="anchorSex" value="男" label="男" data-options="labelWidth:25,checked:true">
+								<input class="easyui-radiobutton" id="rdo_anchorSexgirl" name="anchorSex" value="女" label="女" data-options="labelWidth:25" >
+							</td>
+						</tr>
+						<tr style="height:40px">
+							<td>生日:</td>
+							<td><input class="easyui-datebox" id="input_birthDay" name="birthDay" style="width:150px;"></td>
+							<td>手机号:</td>
+							<td style="width:160px"><input class="easyui-textbox" id="input_phone" name="phone" style="width:150px;" data-options="required:true,missingMessage:'必填!'"></td>
+							<!-- <td>头像:</td>
+							<td><input class="easyui-filebox" id="uploadimg" name="onlinePhoto"   style="width:150px;" data-options="buttonText:'选择文件',accept:'.jpg'" style="width:320px;"></td> -->
+ 						</tr>
+						<tr style="height:40px">
+							<td>直播平台:</td>
+							<td><input class="easyui-textbox" id="input_anchorPlatform" name="anchorPlatform" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>房间号:</td>
+							<td><input class="easyui-textbox" id="input_roomId" name="roomId" style="width:150px;" data-options=""></td>							
+						</tr>
+						<tr style="height:40px">
+							<td>粉丝数:</td>
+							<td><input class="easyui-textbox" id="input_fans" name="fans" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>坑位数:</td>
+							<td><input class="easyui-textbox" id="input_pitFee" name="pitFee" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>30日直播次数:</td>
+							<td><input class="easyui-textbox" id="input_thirtyWorkTimes" name="thirtyWorkTimes" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>主播时间段:</td>
+							<td><input class="easyui-textbox" id="input_workTime" name="workTime" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>近90日销售额:</td>
+							<td><input class="easyui-textbox" id="input_ninetySale" name="ninetySale" style="width:150px;" data-options=""></td>
+							<td>招商计划数:</td>
+							<td><input class="easyui-textbox" id="input_businessAmount" name="businessAmount" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>客单价:</td>
+							<td><input class="easyui-textbox" id="input_perCustomerPrice" name="perCustomerPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>产品销售类别:</td>
+							<td><input class="easyui-textbox" id="input_saleCategory" name="saleCategory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>招商信息:</td>
+							<td colspan="3"><input class="easyui-textbox" id="input_investedInformation" name="investedInformation" style="width: 410px;height: 70px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>	
+			
+			
+			
+		<div id="buttons_dialog_anchor">
+	        <a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+	        <a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+    	</div>
+			
+<!-- 	<div title="新增头像" class="easyui-dialog" id="saveimg" style="width: 500px; height: 400px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttonsimg'">
+	  	 <div style="width:100%;margin-top: 10px;">
+	  	 		 <form id="testform_importimg" method="post" enctype="multipart/form-data">
+ 					                               头像：<input id="imgGifFile" class="easyui-filebox" name="imgfile" data-options="buttonText:'选择文件',accept:'.jpg'"style="width:200px;"/>
+				 </form>
+	  	 		
+	  	 </div>
+	  	 		
+	 
+	 </div>
+		 -->	
+			
+	<div id="saveimg" title="上传头像" class="easyui-dialog" style="width: 500px; height: 250px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#buttons_dialog_onlinePhoto'">
+		<div style="width:100%;margin-top: 10px;">
+	  	 		 <form id="form_add" method="post" enctype="multipart/form-data">
+ 				头像：<input id="imgGifFile" class="easyui-filebox" name="imgfile" data-options="buttonText:'选择文件',accept:'.jpg'"style="width:200px;"/>
+				 </form>
+	  	 </div>		
+    </div>
+	<div id="buttons_dialog_onlinePhoto">
+	    <a class="easyui-linkbutton" href="#" id="btn_saveimg" style="width: 80px;">保&nbsp;&nbsp;存</a>
+		<a class="easyui-linkbutton" href="#" id="btn_closeimg" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+	</div>	
+			
+			
+	<div id="dialog_password" title="修改密码" class="easyui-dialog" style="width: 500px; height: 250px;" data-options="resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_password',closable:false,constrain:true">
+		<div style="width:100%;padding-top:10px; ">
+	        <form id="form_passwordinfo">
+	            <table align="center">							
+					<tr style="height:40px;">
+						<td>旧密码:</td>
+						<td colspan="3"><input id="input_oldpassword" name="oldpassword" class="easyui-passwordbox" iconWidth="28" style="width:347px;height:34px;padding:10px" data-options="required:true,missingMessage:'请输入您的旧密码'"></td>
+					</tr>								
+					<tr style="height:40px;">
+						<td>新密码:</td>
+						<td colspan="3"><input id="input_newpassword" name="newpassword" class="easyui-passwordbox" iconWidth="28" style="width:347px;height:34px;padding:10px" data-options="required:true,missingMessage:'请输入至少六位的新密码'"></td>
+					</tr>
+					<tr style="height:40px;">
+						<td>再次输入新密码:</td>
+						<td colspan="3"><input id="input_secnewpassword" class="easyui-passwordbox" iconWidth="28" style="width:347px;height:34px;padding:10px" data-options="required:true,missingMessage:'请重复输入密码'"></td>
+						
+					</tr>
+	            </table>
+	        </form>
+        </div>
+    </div>
+	
+	<div id="buttons_dialog_password">
+        <a id="btn_savepassword" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+        <a id="btn_closepassword" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+    </div>		
+    
+		
+	</body>
+</html>

@@ -1,0 +1,32 @@
+package edu.hfu.broadcast.dao.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.AnchorApplication;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+@Repository
+public class AnchorApplicationDao {
+	
+	@Resource
+	private BaseDaoImpl baseDao;
+	
+	public AnchorApplication getAnchorApplicationById(Integer applicationId) throws Exception
+	{
+		return baseDao.get(AnchorApplication.class, applicationId);
+	}
+	
+	public List<AnchorApplication> getAllApplication() throws Exception {
+		String hql = "from AnchorApplication";
+		return baseDao.find(hql);
+	}
+
+	public void approveApplication(AnchorApplication applicaiton) throws Exception {
+		baseDao.update(applicaiton);
+	}
+	
+}

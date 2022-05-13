@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/company/company.js"></script> 
+		<title></title>
+		<style type="text/css">
+			ul{
+				list-style:none;
+				width: 979px;
+				height: 400px;
+				margin-left:20px;
+				background-color:#fff;;
+				margin-left:35px;
+				text-indent:0;
+				font:14px/1.5 'Microsoft Yahei','Heiti SC',tahoma , arial , 'Hiragino SansGB'
+				,\\5B8B\4F53 , sans-serif;
+				color: #666;
+			}
+			*{
+				margin: 0;
+				padding: 0;
+				
+			}
+			ul li{
+				width: 312px;
+				
+				float:left ;
+				margin-top:10px ;
+				margin-right: 30px;
+				
+			}
+			.head{
+				display: block;
+				padding: 8px 35px 10px;
+				background-color:#fff;
+				width:1050px ;
+				height: 40px;
+				line-height: 40px;
+				color: #666666;
+				font-size: 13px;
+			}
+			#photo{
+				float: left;
+				height:250px;
+				width: 250px;
+				margin: 10px 10px 10px 35px;
+			}
+			ul li>p{
+				display:inline-block;
+			}
+			#pictureimg{
+				float: left;
+				height:250px;
+				width: 250px;
+				margin: 10px 10px 10px 35px;
+			
+			}
+			#change li{
+				text-align:right;
+				width:250px;
+			
+			}
+			#sp{
+				margin-left:260px;
+				margin-right:30px
+			}
+			#change .sl{
+				width:100%;
+				text-align:left;
+				
+			}
+			/* #change .sl>p{
+				width:150px;
+				display:block;
+				
+			}
+			#qi p{
+				display:block
+				width:150px
+			} */
+			}
+		</style>
+	</head>
+	<body class="easyui-layout"  data-options="fit:true">
+	       
+			<div data-options="region:'north',minHeight:37,border:false">
+				<% if(hasPermission('01-01-001')) {%>
+				<div>
+		    	<form id="form_query" >
+		    		<table style="margin-top:1px;">
+		    		    <tr>
+		    		      	<td>品牌名:<input class="easyui-textbox" name="brandName" style="width: 150px;"></td>
+		    		      	<td>产品名:<input class="easyui-textbox" name="goodsName" style="width: 150px;"></td>
+		    		     	<td>一级类别:<select class="easyui-combobox" id="queryFristCategory" name="fristCategory" style="width:150px;" data-options=""><option value=""></option></select></td>
+							<td>二级类别:<select class="easyui-combobox" id="querySecondCatogory" name="secondCatogory" style="width:150px;" data-options=""><option value=""></option></select></td>
+							<td>三级类别:<select class="easyui-combobox" id="queryThiCategory" name="thirdCategory" style="width:150px;" data-options=""><option value=""></option></select></td>
+		    			 <span style="float: right;margin-top:3.5px;margin-right:25px"> <a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></span>
+		    		    </tr>
+		    		</table>
+		    	</form>
+		    	</div>
+	    	</div>
+	    	
+	       <div  data-options="region:'center'" style="border-width: 0;">
+	       	<table id="tbl_goods"></table>
+		   </div>
+			
+			<div data-options="region:'south',border:'false',minHeight:40"  >
+				<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+				 				
+				 						<% if(hasPermission('01-01-002')) {%>
+					     		<a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-add'">增加</a>
+						        <% }%>
+						        		<% if(hasPermission('01-01-003')) {%>
+						        <a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-edit'">修改</a>
+						        <% }%>
+						        		<% if(hasPermission('01-01-004')) {%>
+						        <a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>
+								<% }%>
+										<% if(hasPermission('01-01-005')) {%>
+								<a class="easyui-linkbutton" id="btn_seeDlg" href="#" data-options="iconCls:'icon-more'">详细信息</a>
+								<% }%>
+					</div>
+	 		</div>
+	 <div title="新增头像" class="easyui-dialog" id="saveimg" style="width: 500px; height: 400px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttonsimg'">
+	  	 		<div style="width:100%;margin-top: 10px;">
+	  	 		 <form id="testform_importimg" method="post" enctype="multipart/form-data">
+ 					                               头像：<input id="imgGifFile" class="easyui-filebox" name="imgfile" data-options="buttonText:'选择文件',accept:'.jpg'"style="width:200px;"/>
+				                      </form>
+	  	 		
+	  	 		</div>
+	  	 		
+	 
+	 </div>
+	 	  
+	<div title="查看佣金" class="easyui-dialog" id="seecommission" style="width: 700px; height: 411px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:true">
+		       		
+		       		<table class="easyui-datagrid"   id="seeanchorcom"  >
+					    
+					</table>
+	  	 	</div>
+	
+	 <div title="新增商品" class="easyui-dialog" id="savegoods" style="width: 1050px; height: 550px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+	  	 		
+	  	 		<div style="width:100%;">
+	  	 			<form id="form_add"  method="post" enctype="multipart/form-data">
+	  	 				<table style="text-align: center;margin-left: auto;margin-right: auto;padding-bottom:15px"> 
+	  						<div><img id="pictureimg" alt="" ></div>
+	  						<ul id="change">
+								<li>产品图片:
+								<input id="uploadimg" class="easyui-filebox" name="fileimg" data-options="buttonText:'选择文件',accept:'.jpg',onChange: function(value){
+		                          var f = $(this).next().find('input[type=file]')[0];
+		                          if (f.files && f.files[0]){
+		                              var reader = new FileReader();
+		                              reader.onload = function(e){		                              				                             		 
+		                             		var imgStr=e.target.result.replace('data:image/jpeg;base64,','');
+		                                  	$('#pictureimg').attr('src', e.target.result);
+		                                  	$('#imgString').val(imgStr);		                                  	                             
+		                             }
+		                             reader.readAsDataURL(f.files[0]);
+		                         }
+		                     }" style="width:150px;"/>
+								</li>
+							    <li>产品名称:
+							    <input type="hidden" id="txt_goodsId" name="goodsId">
+							    <input type="hidden" id="imgString" name="imgString">
+							    <input class="easyui-textbox" id="txt_goodsName" name="goodsName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>品牌名字:<input class="easyui-textbox" id="txt_brandName" name="brandName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>产品单价:<input class="easyui-textbox" id="txt_goodsPrice" name="goodsPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>佣金:<input class="easyui-textbox" id="txt_commission" name="commission" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>物流+包材:<input class="easyui-textbox" id="txt_transportation" name="transportation" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>产品联系人:<input class="easyui-textbox" id="txt_productlinkman" name="productlinkman" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>联系电话:<input class="easyui-textbox" id="txt_phonenumber" name="phonenumber" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>一级类别:<select class="easyui-combobox" id="txt_fristCategory" name="fristCategory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></select></li>
+								<li>二级类别:<select class="easyui-combobox" id="txt_secondCatogory" name="secondCatogory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></select></li>
+								<li>三级类别:<select class="easyui-combobox" id="txt_ThirdCatogory" name="thirdCategory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></select></li>
+								<li>卖点:<input class="easyui-textbox" id="txt_saleTrait" name="saleTrait" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>							
+							    <li>库存:<input class="easyui-textbox" id="txt_inventory" name="inventory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>日常零售价:<input class="easyui-textbox" id="txt_nomalPrice" name="nomalPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li id="sp">优惠方式:<input class="easyui-textbox" id="txt_discountWay" name="discountWay" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li>直播到手价:<input class="easyui-textbox" id="txt_roomPrice" name="roomPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p style="padding-right:48px;">规格:</p><input class="easyui-textbox" id="txt_size" name="size"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p style="padding-right:48px;">备注:</p><input class="easyui-textbox" id="txt_comment" name="comment"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p style="padding-right:48px;">抖音链接:</p><input class="easyui-textbox" id="txt_douyinGoodsLink" name="douyinGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p style="padding-right:48px;">快手链接:</p><input class="easyui-textbox" id="txt_kuaishougoodslink" name="kuaishougoodslink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p>其他平台链接:</p><input class="easyui-textbox" id="txt_otherlink" name="otherlink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p>淘宝佣金链接:</p><input class="easyui-textbox" id="txt_taobaoCommissionLink" name="taobaoCommissionLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								<li class="sl"><p>淘宝/天猫产品链接:</p><input class="easyui-textbox" id="txt_taobaoGoodsLink" name="taobaoGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+								
+								
+								<li class="sl"><p>往常主播价(主播名-直播价)不同价格的都要写上:</p><input class="easyui-textbox" id="txt_pastprice" name="pastprice"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></li>
+							</ul>
+							
+	  	 	 				</table>
+	  	 		</form> 
+	  	 		</div>
+	  	 	</div>
+	  	 	
+	  	 	<!-- 查看全部字段 -->
+	  	 	<div title="查看全部字段" class="easyui-dialog" id="txt_savegoods" style="width: 1080px; height: 550px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:true">
+	  	 		
+	  	 		<div class="head" id="header">
+						
+				</div>
+				<div class="p">
+					<img id='photo' src="#" >
+				</div>
+			<ul class="zz">
+				<li>品牌名字:<p></p></li>
+				<li>产品单价:<p></p></li>
+				<li>日常零售价:<p></p></li>
+				<li>优惠方式:<p></p></li>
+				<li>佣金:<p></p></li>
+				<li>物流+包材:<p></p></li>
+				<li>产品联系人:<p></p></li>
+				<li>联系电话:<p></p></li>
+				<li>规格:<p></p></li>
+				<li>直播到手价:<p></p></li>
+				<li>卖点:<p></p></li>
+				<li>库存:<p></p></li>
+				<li>一级类别:<p></p></li>
+				<li>二级类别:<p></p></li>
+				<li>三级类别:<p></p></li>
+				<li>淘宝佣金链接:<p></p></li>
+				<li>淘宝/天猫产品链接:<p></p></li>
+				<li>往常主播价(主播名-直播价)不同价格的都要写上:<p></p></li>			
+				<li>抖音链接:<p></p></li>
+				<li>快手链接:<p></p></li>
+				<li>其他平台链接:<p></p></li>			
+				<li>备注:<p></p></li>
+			</ul>
+			
+		  	 	</div>
+	  	 	
+	  <div id="div_buttons">
+	        <a class="easyui-linkbutton" href="#" id="btn_save" style="width: 80px;">保&nbsp;&nbsp;存</a>
+	        <a class="easyui-linkbutton" href="#" id="btn_close" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+	    </div>
+	    
+	     <div id="div_buttonsimg">
+	        <a class="easyui-linkbutton" href="#" id="btn_saveimg" style="width: 80px;">保&nbsp;&nbsp;存</a>
+	        <a class="easyui-linkbutton" href="#" id="btn_closeimg" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+	    </div>
+	  
+	<style type="text/css">
+		.datagrid-row-selected {
+		    background: #dedfce;
+		    color: #747270;
+			
+			
+		 }
+		
+	    .c-label{
+	        display:inline-block;
+	        width:200px;
+	        font-weight:bold;
+	    }
+	</style>
+	
+	</body>
+</html>

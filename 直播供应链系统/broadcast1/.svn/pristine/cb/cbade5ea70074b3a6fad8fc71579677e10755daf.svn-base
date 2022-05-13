@@ -1,0 +1,41 @@
+package edu.hfu.broadcast.service.security;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
+	private static final Logger LOG = LoggerFactory.getLogger(CustomUserDetailsServiceImpl.class);
+	
+	@Override
+	public UserDetails loadUserByUsernameAndDomain(String userCode, String errorMsg) throws UsernameNotFoundException,Exception {
+		if (null==errorMsg) {
+			UserDetails usd=null;
+			LOG.debug("userCode：+"+userCode);
+			
+			//增加默认权限（以后添加）
+			GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_01");
+			GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_STUDENT");
+			List<GrantedAuthority> grantedAuthorities = new ArrayList <>();
+			//增加默认权限（以后添加）
+	        grantedAuthorities.add(grantedAuthority1);
+	        grantedAuthorities.add(grantedAuthority2);
+	        
+	        //admin/admin
+	        usd=new MyUserDetails(userCode, "21232f297a57a5a743894a0e4a801fc3", grantedAuthorities,grantedAuthority1) ;
+			return usd;
+		}else {
+			throw new java.lang.RuntimeException(errorMsg);
+		}
+	}
+
+}

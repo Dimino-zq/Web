@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/anchor/anchorlist.js"></script>
+<title>申请列表</title>
+</head>
+<body class="easyui-layout"  data-options="fit:true">
+    
+    <div data-options="region:'north',minHeight:37,border:false">
+    			<% if(hasPermission('02-03-001')) {%>
+    			<div>
+		    	<form id="form_query" >
+		    		<table style="margin-top:1px;">
+		    		    <tr>
+		    		      <td>商品类别:<input class="easyui-textbox" name="businessCategory" style="width: 150px;"></td>
+		    			  <span style="float: right;margin-top:3.5px;margin-right:25px"><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a>
+		    		    </tr>
+		    		</table>
+		    	</form>
+		    	</div>
+		    	<% }%>
+	    	</div>
+    
+    
+    <div data-options="region:'center'" style="border-width: 0;">
+		<table id="tbl_anchorlist"></table>
+	</div>
+	
+</body>
+</html>

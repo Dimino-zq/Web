@@ -1,0 +1,137 @@
+package edu.hfu.broadcast.dao.sysset;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+
+@Repository
+public class AnchorManageDao {
+	
+	@Resource
+	private BaseDaoImpl anchordao;
+	
+	/**
+	 * 根据id查找主播,查询不到时返回null
+	 * @param anchor
+	 * @return AnchorInformation
+	 * @throws Exception
+	 */
+	public AnchorInformation getAnchorById(AnchorInformation anchor) throws Exception {
+		return anchordao.get(AnchorInformation.class, anchor);
+	}
+
+	/**
+	 * 查找所有主播，返回主播的List集合
+	 * @return List
+	 * @throws Exception
+	 */
+	public List<AnchorInformation> getAllAnchor() throws Exception {
+		String hql = "from AnchorInformation";
+		return anchordao.find(hql);
+	}
+
+	/**
+	 * 根据条件查询主播，返回主播的List集合
+	 * @param anch
+	 * @return List
+	 * @throws Exception
+	 */
+	public List<AnchorInformation> getAnchorByCon(AnchorInformation anch) throws Exception {
+		String hql = "from AnchorInformation ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != anch) {
+			//根据主播姓名查询
+			if (null != anch.getAnchorName() && !"".equals(anch.getAnchorName())) {
+				hql += (index == 0 ? "where" : "and") + " anchorName like ?" + index++;
+				params.add('%' + anch.getAnchorName() + '%');
+			}
+		}
+		hql += " order by anchorId";
+		return anchordao.find(hql, params.toArray());
+	}
+
+	/**
+	 * 根据条件分页查询查询主播，返回主播的List集合
+	 * @param anch
+	 * @param pageNo
+	 * @param pageSize
+	 * @return List
+	 * @throws Exception
+	 */
+	public List<AnchorInformation> getAnchorByCon(AnchorInformation anch, int pageNo, int pageSize) throws Exception {
+		String hql = "from AnchorInformation ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != anch) {
+			//根据主播姓名查询
+			if (null != anch.getAnchorName() && !"".equals(anch.getAnchorName())) {
+				hql += (index == 0 ? "where" : "and") + " anchorName like ?" + index++;
+				params.add('%' + anch.getAnchorName() + '%');
+			}
+		}
+		hql += " order by anchorId";
+		return anchordao.findByPage(hql, params.toArray(), pageNo, pageSize);
+	}
+
+	/**
+	 * 根据条件查询主播，返回查询到记录的数量
+	 * @param anch
+	 * @return int
+	 * @throws Exception
+	 */
+	public int getAnchorCountByCon(AnchorInformation anch) throws Exception {
+		String hql = "from AnchorInformation ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != anch) {
+			//根据主播姓名查询
+			if (null != anch.getAnchorName() && !"".equals(anch.getAnchorName())) {
+				hql += (index == 0 ? "where" : "and") + " anchorName like ? " + index++;
+				params.add('%' + anch.getAnchorName() + '%');
+			}
+
+		}
+		hql += " order by anchorId";
+		return anchordao.queryBeanCountByHql(hql, params.toArray());
+	}
+
+	/**
+	 * 保存一条主播信息
+	 * @param anchor
+	 * @throws Exception
+	 */
+	public void saveAnchor(AnchorInformation anchor) throws Exception {
+		anchordao.save(anchor);
+	}
+
+	/**
+	 * 更新一条主播数据
+	 * @param anchor
+	 * @throws Exception
+	 */
+	public void updateAnchor(AnchorInformation anchor) throws Exception {
+		//anchordao.clear();
+		anchordao.update(anchor);
+	}
+
+	/**
+	 * 删除一条主播数据<br/>
+	 * 注意传入的主播对象应是已持久化的（即对该数据先查询一遍）
+	 * @param anchor
+	 * @throws Exception
+	 */
+	public void delAnchor(AnchorInformation anchor) throws Exception {
+//		String hql = "delete AnchorInformation where anchorId=?0";
+//		anchordao.bulkUpdate(hql, anchor);
+		anchordao.delete(anchor);
+	}
+	
+}

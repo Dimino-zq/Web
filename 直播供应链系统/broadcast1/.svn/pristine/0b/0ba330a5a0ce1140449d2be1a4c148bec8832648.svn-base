@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/AnchorManage.js"></script>
+		<title>主播信息</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'north',minHeight:37,border:false">
+	    	<% if(hasPermission('03-02-001')) {%>
+	    	<div>    	
+	    	<form id="form_query">
+	        	<table style="margin-top:1px;margin-left:15px">
+	            	<tr>
+	                	<td>主播姓名：</td>
+	                	<td><input class="easyui-textbox" name="anchorName" style="width:150px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	                	<td>手机号：</td>
+	                	<td><input class="easyui-numberbox" name="phone" style="width:150px"></td>
+	       			</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a id="btn_query" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></span>
+	    		</table>
+	    	</form>
+	    	</div>
+	    	 <% }%>
+	    </div>
+	    
+		<div data-options="region:'south',border:'false',minHeight:40"  >
+			<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+		   		<% if(hasPermission('03-02-002')) {%>
+		   		<a id="btn_addDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">增加</a>
+		    	 <% }%>
+		    	<% if(hasPermission('03-02-004')) {%>
+		    	<a id="btn_delDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+		         <% }%>
+		        <% if(hasPermission('03-02-003')) {%>
+		        <a id="btn_updDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a>
+				 <% }%>
+				<% if(hasPermission('03-02-005')) {%>
+				<a id="btn_disDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-more'">分配商品</a>
+			 	<% }%>
+			
+			</div>
+		</div>
+		
+		<div data-options="region:'center'" style="border-width: 0;">
+			<table id="tbl_anchor"></table>
+		</div>
+				
+		<div id="dialog_anchor" title="主播信息" class="easyui-dialog" style="width: 700px; height: 530px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_anchor',closable:false,constrain:true">
+			<div style="width:100%;padding-top:10px; ">
+		        <form id="form_anchor">
+		            <table align="center">
+						<tr style="height:40px;">
+							<td style="text-align: right">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</td><input type="hidden" id="input_anchorId" name="anchorId">
+							<td style="width:160px"><input class="easyui-textbox" id="input_anchorName" name="anchorName" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">手&nbsp;&nbsp;机&nbsp;&nbsp;号：</td>
+							<td style="width:160px"><input class="easyui-textbox" id="input_phone" name="phone" style="width:160px;" data-options="required:true,missingMessage:'必填!'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</td>
+							<td>
+								<input class="easyui-radiobutton" id="rdo_anchorSexboy" name="anchorSex" value="男" label="男" data-options="labelWidth:25,checked:true">
+								<input class="easyui-radiobutton" id="rdo_anchorSexgirl" name="anchorSex" value="女" label="女" data-options="labelWidth:25" >
+							</td>
+							<td style="text-align: right">生&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日：</td>
+							<td><input class="easyui-datebox" id="input_birthDay" name="birthDay" style="width:160px;"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">直播平台：</td>
+							<td><input class="easyui-textbox" id="input_anchorPlatform" name="anchorPlatform" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">房&nbsp;&nbsp;间&nbsp;&nbsp;号：</td>
+							<td><input class="easyui-textbox" id="input_roomId" name="roomId" style="width:160px;" data-options=""></td>							
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">粉&nbsp;&nbsp;丝&nbsp;&nbsp;数：</td>
+							<td><input class="easyui-textbox" id="input_fans" name="fans" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">坑&nbsp;&nbsp;位&nbsp;&nbsp;数：</td>
+							<td><input class="easyui-textbox" id="input_pitFee" name="pitFee" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">30日直播次数：</td>
+							<td><input class="easyui-textbox" id="input_thirtyWorkTimes" name="thirtyWorkTimes" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">主播时间段：</td>
+							<td><input class="easyui-textbox" id="input_workTime" name="workTime" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">近90日销售额：</td>
+							<td><input class="easyui-textbox" id="input_ninetySale" name="ninetySale" style="width:160px;" data-options=""></td>
+							<td style="text-align: right">招商计划数：</td>
+							<td><input class="easyui-textbox" id="input_businessAmount" name="businessAmount" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">客&nbsp;&nbsp;单&nbsp;&nbsp;价：</td>
+							<td><input class="easyui-textbox" id="input_perCustomerPrice" name="perCustomerPrice" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">产品销售类别：</td>
+							<td><input class="easyui-textbox" id="input_saleCategory" name="saleCategory" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td style="text-align: right">招商信息：</td>
+							<td colspan="3"><input class="easyui-textbox" id="input_investedInformation" name="investedInformation" style="width: 510px;height: 90px;" data-options="required:true,missingMessage:'必填',multiline:true"></td>
+						</tr>
+						<tr style="height: 40px">
+							<td style="text-align: right;"></td>
+							<td colspan="3">注：登录账号为手机号，默认密码为123456</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		
+		<div id="dialog_photo"  class="easyui-dialog" style="width:650px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,constrain:true">
+			<img id="perview"alt="" src="">
+		</div>
+
+		<div id="buttons_photo">
+			<a id="btn_photo" href="#" class="easyui-linkbutton" style="width: 80px;">上&nbsp;&nbsp;传</a>
+		</div>
+		
+		<div id="dialog_mag" title="分配商品" class="easyui-dialog" style="width: 830px; height: 540px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_anchor1',closable:false,constrain:true">
+			<div style="height: 18%;">
+				<form id="form_queryGoods">
+					<table style="padding-left: 10px;padding-top: 5px;padding-bottom: 5px;">
+						<tr style="height: 35px">
+							<td>商品类别：</td><input type="hidden" id="input_anchorId2" name="anchorId">
+							<td><input class="easyui-combobox" id="input_fristCategory" name="fristCategory" style="width: 150px;"></td>
+							<td><input class="easyui-combobox" id="input_secondCatogory" name="secondCatogory" style="width: 150px;"></td>
+							<td><input class="easyui-combobox" id="input_thirdCategory" name="thirdCategory" style="width: 150px;" data-options="disabled:true"></td>
+							<td rowspan="2" style="width: 250px;text-align: right;">
+								<a id="btn_queryGoods" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+		                		<a type="img" href="#" title="查询前请先保存已选中的数据。" class="easyui-tooltip">
+									<img alt="?" src="${ctxPath}/static/img/help.ico" style="margin-bottom: -7px;margin-left: 10px;">
+								</a>
+							</td>
+						</tr>
+						<tr style="height: 35px">
+							<td>商品名称：</td>
+							<td><input class="easyui-textbox" name="goodsName" style="width: 150px;"></td>
+							<td style="text-align: right">所属企业：</td>
+							<td><input class="easyui-combobox" name="sellerName" style="width: 150px;" data-options="url:'${ctxPath}/syscompany/getAllSysCompany',valueField: 'comName', textField: 'comName'"></td>						
+						</tr>
+					</table>
+				</form>
+			</div>
+			<table id="tab_mag" style="height: 82%;"></table>
+		</div>
+				
+		<div id="buttons_dialog_anchor1">
+			<a id="btn_save1" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close1" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div> 
+
+		<div id="buttons_dialog_anchor">
+			<a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+	</body>
+
+</html>
+

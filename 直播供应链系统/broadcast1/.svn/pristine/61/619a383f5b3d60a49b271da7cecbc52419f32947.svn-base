@@ -1,0 +1,151 @@
+/**
+ * 
+ */
+$(document).ready(function(){
+	var path=getRootPath();
+	merchkind();
+	
+	//查询
+/*	$("#btn_query").click(function(){
+		var queryParams=$('#form_query').serializeJSON();
+	    $('#tbl_merchKind').datagrid('load',queryParams);
+	    });*/
+	
+	//点击增加--对话框打开
+	$("#btn_addDlg").click(function(){
+    	$("#dlg_merchKind").dialog("open");
+  	});
+
+	//点击增加对话框中关闭--关闭
+	$("#btn_close").click(function(){
+		clearForm();
+   	$("#dlg_merchKind").dialog("close");
+  });
+	
+		//增加
+	$("#btn_save").click(function(){
+			var comName=$("#txt_KindName").textbox("getValue");
+			if (comName==""){
+				$.messager.alert("提示","请输入商品类别名称!","info");
+				$("#txt_KindName").next("span").find("input[type='text']").focus();
+			return  false;
+			}
+		
+			
+			var level=$("#com_level").combobox("getValue");
+			if (level==""){
+				$.messager.alert("提示","请选择商品等级!","info");
+			return  false;
+			}
+			var categoryId=$("#txt_merchKindId").val();
+			if (categoryId==""){
+		    	var url=path+"/merchkind/saveCommCategories";
+		    	var postData=$('#form_merchKind').serializeJSON();
+		    	$.post(url,postData,function(data){
+		        if (data=="succ"){
+		        	$.messager.alert("提示","增加成功","info")
+		        	$("#dlg_merchKind").dialog("close");
+		        	//$("#btn_query").click();
+		        	clearForm();
+		        }else{
+		          $.messager.alert("提示","增加失败，请更改后重试","info");
+		        }
+		      });
+			}
+		else {
+			var url=path+"/merchkind/updCommCategories";
+			var postData=$('#form_merchKind').serializeJSON();
+			$.post(url,postData,function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					$("#dlg_merchKind").dialog("close");
+					//$("#btn_query").click();
+					$("#form_merchKind").form("reset");
+					clearForm();
+				}else{
+					$.messager.alert("提示","修改失败","info");
+				}
+			});
+		}
+	});
+	//点击修改
+	$("#btn_updDlg").click(function(){
+		var  row=$('#tbl_merchKind').datagrid("getSelected");
+		
+		if (row==null){
+			$.messager.alert("提示","请选中要修改的行","info");
+			return false;
+		}else{
+			$("#txt_merchKindId").val(row.categoryId);
+			$("#txt_KindName").textbox("setValue",row.categoryName);
+			$("#com_level").combobox("setValue",row.categorylevel);
+			$("#txt_merchKind").textbox("setValue",row.parent);
+			$('#dlg_company').dialog('setTitle', '修改商品类别信息');
+			$("#txt_updDate").datebox("setValue",row.updDate);
+			$("#dlg_merchKind").dialog("open");
+		}
+		});
+	//删除
+	$("#btn_delDlg").click(function () {
+    var row=$("#tbl_merchKind").datagrid("getSelected");
+        if (null!=row)
+        {
+          var categoryId=row.categoryId;
+          var postData={"categoryId":categoryId};
+          $.post((path+"/merchkind/deleteCommCategories"),postData,function (data) {
+              if ("deletesuccess"==data)
+              {
+                  $.messager.alert("提示","删除成功！","info");
+                  company()
+              }
+              else 
+				{
+					$.messager.alert("提示","删除失败!","info");
+			  }
+                  
+          });
+        }
+        else
+        {
+            $.messager.alert("提示","请选中一行！","info");
+			return false;
+        }
+    });
+	
+	
+	
+	function clearForm(){
+		$("#categoryId").val("");
+		$("#categoryName").textbox("setValue","");
+		$("#categorylevel").combobox("setValue","");
+	}
+	
+	//初始化表单
+	function merchkind(){
+		var url=path+"/merchkind/getAllMerchKind";
+	    $("#tbl_merchKind").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+            pagePosition:"bottom",
+            pagination:true,
+  			pageSize:10,
+            pageList:[10,20,50],
+            pageNumber:1,
+	    	columns:[[
+			{field:"categoryId",title:"类别编号",width:100},
+			{field:"categoryName",title:"类别名称",width:100},
+			{field:"categorylevel",title:"类别等级",width:100},
+	      ]]
+	    })
+	}
+	
+	
+	
+})

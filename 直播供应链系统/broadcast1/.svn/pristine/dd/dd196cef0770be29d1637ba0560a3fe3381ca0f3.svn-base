@@ -1,0 +1,22 @@
+package edu.hfu.broadcast.dao.anchor;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.AnchorApplication;
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+@Repository
+public class AnchorDistributeDao {
+	
+	@Resource
+	private BaseDaoImpl baseDaoImpl;
+
+	public void saveApplication(AnchorApplication application) throws Exception {
+		baseDaoImpl.save(application);
+	}
+	
+
+}

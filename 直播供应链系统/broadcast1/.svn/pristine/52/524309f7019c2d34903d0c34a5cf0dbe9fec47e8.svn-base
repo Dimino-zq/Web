@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="../css/themes/bootstrap/easyui.css"/>
+		<link rel="stylesheet" href="../css/themes/icon.css"/>
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/sysset/anchorManagement.js"></script>
+		<title>主播管理</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'north',minHeight:37,border:false">
+	    	<form id="form_query">
+	        	<table style="margin-top:1px;margin-left:15px">
+	            	<tr>
+	                	<td>主播姓名：<input class="easyui-textbox" name="anchorName" style="width:150px"></td>
+	       			</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a id="btn_query" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></span>
+	    		</table>
+	    	</form>
+	    </div>
+		<div data-options="region:'south',border:'false',minHeight:40"  >
+				<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+			   		<a id="btn_addDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">增加</a>
+			    	<a id="btn_delDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
+			        <a id="btn_updDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a>
+					<a id="btn_disDlg" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-more'">分配商品</a>
+				</div>
+		</div>
+		
+		<div  data-options="region:'center'" style="border-width: 0;">
+<!--			 	<table id="tbl_anchor"></table>-->
+			
+		</div>
+				
+		<div id="dialog_anchor" title="主播信息" class="easyui-dialog" style="width: 500px; height: 330px;" data-options="iconCls:'',resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_anchor1',closable:false,constrain:true">
+			<div style="width:100%;padding-top:10px; ">
+		        <form id="form_anth">
+		            <table align="center">
+						<tr style="height:40px;">
+							<td>姓名:</td><input type="hidden" id="input_applyId" name="applyId">
+							<td style="width:160px"><input class="easyui-textbox" id="input_anchorName" name="anchorName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>账号:<input type="hidden" id="input_anchorId" name="anchorId"></td>
+							<td style="width:160px"><input class="easyui-textbox" id="input_anchorNo" name="anchorNo" style="width:150px;" data-options="required:true,missingMessage:'必填!默认密码为111666'"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>性别:</td>
+							<td>
+								<input class="easyui-radiobutton" id="rdo_anchorSexboy" name="anchorSex" value="男" label="男" data-options="labelWidth:25,checked:true">
+								<input class="easyui-radiobutton" id="rdo_anchorSexgirl" name="anchorSex" value="女" label="女" data-options="labelWidth:25" >
+							</td>
+							<td>生日:</td>
+								<td><input class="easyui-datebox" id="input_birthDay" name="birthDay" style="width:150px;"></td>
+						</tr>
+						<tr style="height:40px">
+							<td>主播电话:</td>
+							<td><input class="easyui-textbox" id="input_phone" name="phone" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td>民族:</td>
+							<td><input class="easyui-combobox" id="input_nationality" name="nation" style="width:150px;" data-options=""></td>
+						</tr>
+						<tr style="height:40px">
+							<td>籍贯:</td>
+							<td colspan="3"><input class="easyui-textbox" id="input_nativeplace1" style="width: 347px;" data-options="readonly:true"></td></tr>
+						<tr style="height:40px">
+							<td>身份证:</td>
+							<td colspan="3"><input class="easyui-textbox" id="input_identity" name="identity"   style="width:347px;" data-options="readonly:true"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+
+		<div id="dialog_mag" title="分配商品信息" class="easyui-dialog" style="width: 680px; height: 510px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#buttons_dialog_anchor',closable:false,constrain:true">
+			<div>
+				<table>
+					<tr>
+						<td>商品名称:<input class="easyui-textbox" name="merchName" style="width: 150px;"></td>
+						<td>所属企业:<input class="easyui-textbox" name="merchKind" style="width: 150px;"></td>
+						<td><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></td>
+					</tr>
+				</table>
+			</div>
+			<table align="center" id="tab_mag"></table>
+		</div>
+				
+		<div id="buttons_dialog_anchor">
+			<a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+
+		<div id="buttons_dialog_anchor1">
+			<a id="btn_save1" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close2" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+	</body>
+
+</html>

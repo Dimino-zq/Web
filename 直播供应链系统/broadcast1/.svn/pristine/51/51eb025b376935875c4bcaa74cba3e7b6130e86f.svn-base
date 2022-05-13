@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/company/company.js"></script> 
+		<title></title>
+	</head>
+	<body class="easyui-layout"  data-options="fit:true">
+	       
+			<div data-options="region:'north',minHeight:37,border:false">
+		    	<form id="form_query" >
+		    		<table style="margin-top:1px;">
+		    		    <tr>
+		    		      <td>品牌名:<input class="easyui-textbox" name="brandName" style="width: 150px;"></td>
+		    		      <td>产品名:<input class="easyui-textbox" name="goodsName" style="width: 150px;"></td>
+		    			  <td><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></td>
+		    		    </tr>
+		    		</table>
+		    	</form>
+	    	</div>
+	    	
+	       <div  data-options="region:'center'" style="border-width: 0;">
+	       	<table id="tbl_goods"></table>
+		   </div>
+			
+			<div data-options="region:'south',border:'false',minHeight:40"  >
+				<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+				
+					     		<a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-add'">增加</a>
+						        <a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-edit'">修改</a>
+						        <a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>
+								<a class="easyui-linkbutton" id="btn_seeDlg" href="#" data-options="iconCls:'icon-more'">详细信息</a>
+					</div>
+	 		</div>
+	 	  
+	  <div title="新增商品" class="easyui-dialog" id="savegoods" style="width: 1050px; height: 420px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+	  	 		<div style="width:100%;margin-top: 10px;">
+	  	 			<form id="form_add">
+	  	 				<table style="text-align: center;margin-left: auto;margin-right: auto;padding-top:10px">
+	  						<tr style="height: 40px">
+	  						    <td style="text-align: right;">产品名称:<input type="hidden" id="txt_goodsId" name="goodsId"></td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_goodsName" name="goodsName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						     <td style="text-align: right;">品牌名字:</td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_brandName" name="brandName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">规格:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_size" name="size" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							<td style="text-align: right;">产品单价:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_goodsPrice" name="goodsPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						</tr>
+							
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">库存:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_inventory" name="inventory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">佣金:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_commission" name="commission" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">备注:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_comment" name="comment" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">物流+包材:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_transportation" name="transportation" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">日常零售价:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_nomalPrice" name="nomalPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">直播到手价:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_roomPrice" name="roomPrice" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">优惠方式:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_discountWay" name="discountWay" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  							<td style="text-align: right;">往常主播价(主播名-直播价)不同价格的都要写上:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_pastprice" name="pastprice"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  						     <td style="text-align: right;">卖点:</td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_saleTrait" name="saleTrait" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">产品联系人:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_productlinkman" name="productlinkman" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							 <td style="text-align: right;">联系电话:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_phonenumber" name="phonenumber" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  						    <td style="text-align: right;">一级类别:</td>
+	  						    <td style="width:160px"><input class="easyui-textbox" id="txt_fristCategory" name="fristCategory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							<td style="text-align: right;">二级类别:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_secondCatogory" name="secondCatogory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  							<td style="text-align: right;">三级类别:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_thirdCategory" name="thirdCategory" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  						     <td style="text-align: right;">淘宝佣金链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_taobaoCommissionLink" name="taobaoCommissionLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>							</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">淘宝/天猫产品链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_taobaoGoodsLink" name="taobaoGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">抖音链接:</td>
+	  							 <td colspan="10"><input class="easyui-textbox" id="txt_douyinGoodsLink" name="douyinGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">快手链接:</td>
+	  							 <td colspan="10"><input class="easyui-textbox" id="txt_kuaishougoodslink" name="kuaishougoodslink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">其他平台链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_otherlink" name="otherlink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填'"></td>
+	  						</tr>
+	  	 					</table>
+	  	 		</form>
+	  	 		</div>
+	  	 	</div>
+	  	 	
+	  	 	<!-- 查看全部字段 -->
+	  	 	<div title="查看全部字段" class="easyui-dialog" id="txt_savegoods" style="width: 1050px; height: 420px;"
+	  	 		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:true">
+	  	 		<div style="width:100%;margin-top: 10px;">
+	  	 			<form id="form_add">
+	  	 				<table style="text-align: center;margin-left: auto;margin-right: auto;padding-top:10px">
+	  						<tr style="height: 40px">
+	  						    <td style="text-align: right;">产品名称:<input type="hidden" id="txt_goodsId1" name="goodsId"></td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_goodsName1" name="goodsName" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						     <td style="text-align: right;">品牌名字:</td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_brandName1" name="brandName" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">规格:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_size1" name="size" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							<td style="text-align: right;">产品单价:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_goodsPrice1" name="goodsPrice" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+							
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">库存:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_inventory1" name="inventory" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">佣金:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_commission1" name="commission" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">备注:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_comment1" name="comment" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">物流+包材:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_transportation1" name="transportation" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">日常零售价:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_nomalPrice1" name="nomalPrice" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">直播到手价:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_roomPrice1" name="roomPrice" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">优惠方式:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_discountWay1" name="discountWay" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  							<td style="text-align: right;">往常主播价(主播名-直播价)不同价格的都要写上:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_pastprice1" name="pastprice"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  						     <td style="text-align: right;">卖点:</td>
+	  						     <td style="width:160px"><input class="easyui-textbox" id="txt_saleTrait1" name="saleTrait" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">产品联系人:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_productlinkman1" name="productlinkman" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							 <td style="text-align: right;">联系电话:</td>
+	  							 <td style="width:160px"><input class="easyui-textbox" id="txt_phonenumber1" name="phonenumber" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  						    <td style="text-align: right;">一级类别:</td>
+	  						    <td style="width:160px"><input class="easyui-textbox" id="txt_fristCategory1" name="fristCategory" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							<td style="text-align: right;">二级类别:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_secondCatogory1" name="secondCatogory" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  							<td style="text-align: right;">三级类别:</td>
+	  							<td style="width:160px"><input class="easyui-textbox" id="txt_thirdCategory1" name="thirdCategory" style="width:150px;" data-options="required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						
+	  						<tr style="height: 40px">
+	  						     <td style="text-align: right;">淘宝佣金链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_taobaoCommissionLink1" name="taobaoCommissionLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>							</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">淘宝/天猫产品链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_taobaoGoodsLink1" name="taobaoGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">抖音链接:</td>
+	  							 <td colspan="10"><input class="easyui-textbox" id="txt_douyinGoodsLink1" name="douyinGoodsLink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">快手链接:</td>
+	  							 <td colspan="10"><input class="easyui-textbox" id="txt_kuaishougoodslink1" name="kuaishougoodslink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  						<tr style="height: 40px">
+	  							 <td style="text-align: right;">其他平台链接:</td>
+	  							<td colspan="10"><input class="easyui-textbox" id="txt_otherlink1" name="otherlink"   style="width:900px;" data-options="validType:'identity',delay:400,required:true,missingMessage:'必填',readonly:true"></td>
+	  						</tr>
+	  	 					</table>
+	  	 		</form>
+	  	 		</div>
+	  	 	</div>
+	  	 	
+	  <div id="div_buttons">
+	        <a class="easyui-linkbutton" href="#" id="btn_save" style="width: 80px;">保&nbsp;&nbsp;存</a>
+	        <a class="easyui-linkbutton" href="#" id="btn_close" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+	    </div>
+	  
+	<style type="text/css">
+		.datagrid-row-selected {
+		    background: #dedfce;
+		    color: #747270;
+			
+			
+		 }
+		
+	    .c-label{
+	        display:inline-block;
+	        width:200px;
+	        font-weight:bold;
+	    }
+	</style>
+	
+	</body>
+</html>

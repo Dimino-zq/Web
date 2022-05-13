@@ -1,0 +1,22 @@
+package edu.hfu.broadcast.service.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.AnchorApplication;
+import edu.hfu.broadcast.dao.sysset.AnchorApplicationDao;
+
+@Service
+public class AnchorApplicationService {
+	@Resource
+	AnchorApplicationDao applicationDao;
+
+	public List<AnchorApplication> getAllApplication() throws Exception {
+		return applicationDao.getAllApplication();
+	}
+	
+	
+}

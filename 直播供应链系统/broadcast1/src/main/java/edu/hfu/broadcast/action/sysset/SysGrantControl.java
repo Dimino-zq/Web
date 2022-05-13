@@ -1,0 +1,213 @@
+package edu.hfu.broadcast.action.sysset;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysGrant;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.sysset.SysGrantCodeDao;
+
+
+import edu.hfu.broadcast.service.sysset.SysGrantControlService;
+
+
+@RestController
+@RequestMapping(value = "/sysgrantcontrol")
+public class SysGrantControl {
+	private final Logger LOG = LoggerFactory.getLogger(SysGrantControl.class);
+	@Resource
+	SysGrantControlService sysGrantControlService;
+	
+	@RequestMapping(value = "/gotoSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView gotoSysGrantControl() {
+		ModelAndView mod = new ModelAndView("sysset/sysGrantControl.btl");
+		return mod;
+	}
+	
+	//查询所有
+	@RequestMapping(value = "/getAllSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<SysUser> getAllSysGrantControl() {
+
+		try {
+			return sysGrantControlService.getAllSysGrantControl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//条件查询
+	@RequestMapping(value = "/getSysGrantControlByCon", method = { RequestMethod.GET, RequestMethod.POST })
+	public Map<String, Object> getSysGrantControlByCon(HttpSession session, SysGrant sysGrant, SysUser sysUser,int page, int rows) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+
+			List<SysCompany> ls = sysGrantControlService.getSysGrantControlByCon(sysGrant,sysUser, page, rows);
+			Integer count = sysGrantControlService.getSysGrantControlCountByCon(sysGrant,sysUser);
+			map.put("rows", ls);
+			map.put("total", count);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("total", 0);
+			map.put("rows", null);
+
+		}
+		return map;
+	}
+	
+	//增加
+	@RequestMapping(value = "/saveSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String saveSysGrantControl(SysGrant sysGrant, HttpServletRequest request) {
+		String mess = "";
+
+		try {
+			
+			HttpSession session = request.getSession();
+			mess = sysGrantControlService.saveSysGrantControl(sysGrant);
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+	
+	
+	
+	//修改
+	@RequestMapping(value = "/updSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String updSysGrantControl(HttpSession session, Integer userId, String grandCode) {
+		String mess = "";
+
+		try {
+			System.out.println(userId);
+			System.out.println(grandCode);
+			mess = sysGrantControlService.updSysGrantControl(userId,grandCode);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+	//删除
+	@RequestMapping(value = "/deleteSysGrantControl", method = { RequestMethod.GET, RequestMethod.POST })
+	public String deleteSysGrantControl(SysGrant sysGrant) {
+		String mess = "";
+		try {
+			sysGrantControlService.deleteSysGrantControl(sysGrant);
+			mess = "deletesuccess";
+		} catch (Exception e) {
+			e.printStackTrace();
+			mess = e.toString();
+		}
+		return mess;
+	}
+	
+	/**
+	 * 新建一个管理员信息
+	 * @author tomset
+	 * @param user
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/saveAdmin",method = {RequestMethod.GET,RequestMethod.POST})
+	public Map<String, String> saveAdmin(SysUser user, HttpSession session)
+	{
+    	Map<String,String> mess = new HashMap<String, String>();
+    	//从session中获取当前登录用户的信息
+    	SysUser createUser = (SysUser) session.getAttribute("user");
+		try {
+			if(null == session.getAttribute("user"))
+				throw new RuntimeException("增加失败：未登录状态！");
+			else if(!"1".equals(session.getAttribute("userType")))
+				throw new RuntimeException("增加失败：用户类型不匹配！");
+			else if(null == user)
+				throw new RuntimeException("增加失败：获取数据失败！");
+			else
+				mess.put("tip", sysGrantControlService.saveAdmin(user, createUser.getPhoneNum()));		//目前用户名即为电话号码
+		} catch (RuntimeException e) {
+			LOG.debug(e.getMessage());
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+	}
+	
+	/**
+	 * 修改一个管理员信息
+	 * @author tomset
+	 * @param user
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/updateAdmin",method = {RequestMethod.GET,RequestMethod.POST})
+	public Map<String,String> updateAdmin(SysUser user, HttpSession session)
+	{
+    	Map<String,String> mess = new HashMap<String, String>();
+    	//从session中获取当前登录用户的信息
+    	SysUser updUser = (SysUser) session.getAttribute("user");
+		try {
+			if(null == session.getAttribute("user"))
+				throw new RuntimeException("修改失败：未登录状态！");
+			else if(!"1".equals(session.getAttribute("userType")))
+				throw new RuntimeException("修改失败：用户类型不匹配！");
+			else if(null == user || null == user.getUserId())
+				throw new RuntimeException("修改失败：请选择一条数据！");
+			else
+				mess.put("tip", sysGrantControlService.updateAdmin(user, updUser.getPhoneNum()));		//目前用户名即为电话号码
+		} catch (RuntimeException e) {
+			LOG.debug(e.getMessage());
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+	}
+	
+	/**
+	 * 删除一条管理员信息
+	 * @author tomset
+	 * @param userId
+	 * @param session
+	 * @return
+	 */
+    @RequestMapping(value = "/delAdmin",method = {RequestMethod.GET,RequestMethod.POST})
+    public Map<String,String> delAdmin(Integer userId, HttpSession session)
+    {
+    	Map<String,String> mess = new HashMap<String, String>();
+		try {
+			if(null == session.getAttribute("user"))
+				throw new RuntimeException("删除失败：未登录状态！");
+			else if(!"1".equals(session.getAttribute("userType")))
+				throw new RuntimeException("删除失败：用户类型不匹配！");
+			else if(null == userId)
+				throw new RuntimeException("删除失败：请选择一条数据！");
+			else
+				mess.put("tip", sysGrantControlService.delAdmin(userId));
+		} catch (RuntimeException e) {
+			LOG.debug(e.getMessage());
+			e.printStackTrace();
+			mess.put("tip", e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mess;
+    }
+}

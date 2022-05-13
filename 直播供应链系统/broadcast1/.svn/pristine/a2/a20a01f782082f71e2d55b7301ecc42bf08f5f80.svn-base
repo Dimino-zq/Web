@@ -1,0 +1,47 @@
+package edu.hfu.broadcast.dao.anchor;
+
+import java.util.List;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+
+public class anchorDao {
+	BaseDaoImpl baseDaoImpl;
+	
+	
+	//获取全部
+		public List<AnchorInformation> getAllAnchorInformation(AnchorInformation anchorinform) throws Exception {
+			String hql = "from AnchorInformation";
+			return baseDaoImpl.find(hql);
+		}
+	//根据Id查询
+		public AnchorInformation GetAnchorInformationById(AnchorInformation anchorinform) throws Exception {
+			String hql = "from AnchorInformation where anchorId = " + anchorinform.getAnchorId();
+			return (AnchorInformation) baseDaoImpl.find(hql).get(0);
+		}
+		
+	//修改信息
+	public void updAnchorInformation(AnchorInformation anchorinform) throws Exception {
+		baseDaoImpl.update(anchorinform);
+	}
+	
+	//更改密码
+	public void chgPassword(SysUser user) throws Exception {
+
+		baseDaoImpl.update(user);
+
+		// TODO Auto-generated method stub
+
+	}
+	//获取用户
+			public List<SysUser> getUser(SysUser plat) throws Exception {
+				// TODO Auto-generated method stub
+				String hql="from SysUser where userId='"+plat.getUserId()+"'";
+				return baseDaoImpl.find(hql);
+			}
+			
+			
+}

@@ -1,0 +1,52 @@
+package edu.hfu.broadcast.service.anchor;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.AnchorApplication;
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.ComGoodsInformation;
+import edu.hfu.broadcast.bean.GoodsDistribution;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.anchor.AnchorDistributeDao;
+
+@Service
+public class AnchorDistributeService {
+	
+	@Resource
+	AnchorDistributeDao distributeDao;
+
+	public String saveApplication(AnchorApplication application, String phoneNum, AnchorInformation anchor) throws Exception {
+		application.setCreateUser(phoneNum);
+		application.setCreateDate(new Date());
+		application.setAnchorInformation(anchor);
+		application.setStatus("未处理");
+		distributeDao.saveApplication(application);
+		return "succ";
+	}
+	
+	//查询主播商品列表
+		public List<GoodsDistribution> getallanchorgoods() throws Exception {
+			return distributeDao.getallanchorgoods();
+		}
+	//查询
+		public List<GoodsDistribution> getGoodsDistributionByCon(GoodsDistribution goodsdistribution) throws Exception {
+			return distributeDao.getGoodsDistributionByCon(goodsdistribution);
+		}
+
+		public List<GoodsDistribution> getGoodsDistributionByCon(GoodsDistribution goodsdistribution, int pageNo, int pageSize) throws Exception {
+			return distributeDao.getGoodsDistributionByCon(goodsdistribution, pageNo, pageSize);
+		}
+		public Integer getGoodsDistributionCountByCon(GoodsDistribution goodsdistribution) throws Exception {
+			return distributeDao.getGoodsDistributionCountByCon(goodsdistribution);
+		}
+
+
+		
+	
+}

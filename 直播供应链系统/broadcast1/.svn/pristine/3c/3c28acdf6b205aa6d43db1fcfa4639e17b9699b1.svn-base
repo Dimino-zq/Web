@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<META HTTP-EQUIV="pragma" CONTENT="no-cache"> 
+	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+	<link rel="styleSheet" type="text/css" href="${ctxPath}/static/css/login.css" >
+	<script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/login.js"></script>
+<title></title>
+</head>
+<body>
+	<form  method="post"  id="loginForm" target="_self" action="${ctxPath}/userLogin">
+	<div id="aa">
+			<div class="two">
+			<div style="padding-top: 100px;">
+				<table class="formTbl">
+					<tr style="vertical-align: bottom;">
+						<td style="text-align: right; width: 25%"><img src="${ctxPath}/static/img/name.png" style="width:40px;height:38px"></td>
+						<td style="text-align: left; width: 75%;padding-bottom: 5px;">
+							<input type="text" id="txt_userCode" class="loginText" name="userCode" placeholder="请输入用户名" />
+						</td>
+					</tr>
+					<tr style="vertical-align: bottom;">
+						<td style="text-align: right; "><img  id="lock" style="width:40px;height:38px" src="${ctxPath}/static/img/password.png"  ></td>
+						<td style="text-align: left; ;padding-bottom: 5px;">
+							<input type="password" class="loginText" id="txt_userPass" name="userPass" placeholder="请输入密码"/>
+						</td>
+					</tr>
+					<tr style="vertical-align: bottom;">
+						<td style="text-align: right; "><img src="${ctxPath}/static/img/safe.png" style="width:40px;height:38px" ></td>
+						<td style="text-align: left; ;padding-bottom: 5px;">
+							<input type="text"class="loginText" id="txt_userVerCode" name="userVerCode" style="width:170px;" placeholder="请输入验证码"/>
+							<img src="${ctxPath}/vercode" style="height: 38px;">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;">
+							<div   style="width: 100%;text-align: center">
+								<font  color="red" id="mess">${mess}</font>
+							</div>						
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;">
+							<div id="login_click"><a id="btlogin" href="#">登 录</a>	</div>								
+						</td>
+					</tr>
+				</table>		
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

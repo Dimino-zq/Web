@@ -1,0 +1,162 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	//alert(111);
+	company();
+	
+	
+	$("#btn_addDlg").click(function(){
+    	$("#dlg_grantCode").dialog("open");
+  	});
+	//关闭
+	$("#btn_close").click(function(){
+		clearForm();
+   	$("#dlg_grantCode").dialog("close");
+  });
+	
+	$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_grantCode').datagrid('load',queryParams);
+    });
+
+
+$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_grantCode').datagrid('load',queryParams);
+    });
+
+	//增加
+	$("#btn_save").click(function(){
+		$("#txt_signTime").attr("disabled","true");
+			
+			
+			var txt_grantId=$("#txt_grantId").val();
+			if (txt_grantId==""){
+		    	var url=path+"/sysgrantcode/saveSysGrantCode";
+		    	var postData=$('#form_company').serializeJSON();
+		    	$.post(url,postData,function(data){
+		        if (data=="succ"){
+		        	$.messager.alert("提示","增加成功","info")
+		        	$("#dlg_grantCode").dialog("close");
+		        	$("#btn_query").click();
+		        	clearForm();
+		        }else{
+		          $.messager.alert("提示","增加失败","info");
+				  $("#txt_comName").next("span").find("input[type='text']").focus();
+				  console.log(data);	
+		        }
+		      });
+			}
+		else {
+			var url=path+"/sysgrantcode/updSysGrantCode";
+			var postData=$('#form_company').serializeJSON();
+			$.post(url,postData,function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					$("#dlg_grantCode").dialog("close");
+					$("#btn_query").click();
+					$("#form_company").form("reset");
+					clearForm();
+				}else{
+					$.messager.alert("提示","修改错误","info");
+				}
+			});
+		}
+	});
+	
+	//点击修改
+	$("#btn_updDlg").click(function(){
+		var  row=$('#tbl_grantCode').datagrid("getSelected");
+		
+		if (row==null){
+			$.messager.alert("提示","请选中要修改的行","info");
+			return false;
+		}else{
+			$("#txt_grantId").val(row.grantId);
+			$("#txt_grantName").textbox("setValue",row.grantName);
+			$("#txt_grantCode").textbox("setValue",row.grantCode);
+			//$("#txt_grantPath").textbox("setValue",row.grantPath);
+			$('#dlg_grantCode').dialog('setTitle', '修改权限码');
+			
+			$("#dlg_grantCode").dialog("open");
+		}
+		});
+	
+	
+	//删除
+	$("#btn_delDlg").click(function () {
+    var row=$("#tbl_grantCode").datagrid("getSelected");
+        if (null!=row)
+        {
+	 		$.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+				if (r)
+				{
+		          var grantId=row.grantId;
+		          var postData={"grantId":grantId};
+		          $.post((path+"/sysgrantcode/deleteSysGrantCode"),postData,function (data) {
+		              if ("deletesuccess"==data)
+		              {
+		                  $.messager.alert("提示","删除成功！","info");
+		                  company()
+		              }
+              	else 
+					{
+					$.messager.alert("提示","该权限码正在使用!","info");
+			 		}
+                  
+          		});
+				}
+			});
+        }
+        else
+        {
+            $.messager.alert("提示","请选中一行！","info");
+			return false;
+        }
+    });
+
+//清空表单功能
+	function clearForm(){
+		$("#txt_companyId").val("");
+		$("#txt_comName").textbox("setValue","");
+		$("#txt_comPhone").textbox("setValue","");
+		$("#txt_comStartTime").datebox("setValue","");
+		$("#txt_comeail").textbox("setValue","");	
+		$("#txt_comContacts").textbox("setValue","");
+		$("#txt_comBusiness").textbox("setValue","");
+		$("#txt_businessRange").textbox("setValue","");
+		$("#txt_comAddress").textbox("setValue","");
+		$("#txt_comProfile").textbox("setValue","");
+		$('#dlg_grantCode').dialog('setTitle', '增加权限码');
+	}
+
+
+	function company(){
+		var url=path+"/sysgrantcode/getSysGrantCodeByCon";
+	    $("#tbl_grantCode").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+            pagePosition:"bottom",
+            pagination:true,
+            pageSize:50,
+            pageList:[50,60,70],
+            pageNumber:1,
+	    	columns:[[
+			{field:"grantCode",title:"权限码",width:100},
+			{field:"grantName",title:"权限名",width:100}
+		
+	      ]]
+	    });
+	}
+})
+
+
+
+/*<a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-edit'">修改</a>
+<a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>*/

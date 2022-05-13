@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/anchor/anchordistribute.js"></script>
+<title>主播商品</title>
+</head>
+<body class="easyui-layout"  data-options="fit:true">
+
+	<div data-options="region:'north',minHeight:37,border:false">
+		<form id="form_query" >
+			<table style="margin-top:1px;">
+			    <tr>
+			      	<td>产品名称:<input class="easyui-textbox" name="goodsName" style="width: 150px;"></td>
+			      	<!-- <td>价格:<input class="easyui-textbox" name="mingoodsPrice" style="width: 75px;">--<input class="easyui-textbox" name="maxgoodsPrice" style="width: 75px;"></td>
+			      	<td>佣金:<input class="easyui-textbox" name="minmoney" style="width: 75px;">--<input class="easyui-textbox" name="maxmoney" style="width: 75px;"></td> -->
+			      	<td>价格:<input class="easyui-textbox" name="goodsPrice" style="width: 75px;"></td>
+			      	<td>佣金:<input class="easyui-textbox" name="money" style="width: 75px;"></td>
+			  		<span style="float: right;margin-top:3.5px;margin-right:25px"><a id="btn_query" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></span>
+			    </tr>
+			</table>
+		</form>
+	</div>
+	
+	<div data-options="region:'center'" style="border-width: 0;">
+		<table id="tbl_anchorDistribute"></table>
+	</div>
+	
+	<div data-options="region:'south',border:'false',minHeight:40"  >
+	<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+		  <a class="easyui-linkbutton" id="btn_appDlg" href="#" data-options="iconCls:'icon-add '">发起申请</a>
+		
+	</div>
+	  </div>
+	  
+	  	<div title="商品申请" class="easyui-dialog" id="dlg_application" style="width: 750px; height: 350px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+			<div style="width:100%;padding-top:20px;">
+		        <form id="form_application">
+		            <table align="center">
+						<tr style="height:60px;">
+							<td style="text-align: right">商品类别：</td>
+							<td style="width:160px"><input class="easyui-combobox" id="input_lv1" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="width:160px"><input class="easyui-combobox" id="input_lv2" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="width:160px"><input class="easyui-combobox" id="input_businessCategory" name="businessCategory" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:60px">
+							<td style="text-align: right">佣金：</td>
+							<td><input class="easyui-textbox" id="input_commission" name="commission" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+							<td style="text-align: right">服务费：</td>
+							<td><input class="easyui-textbox" id="input_service" name="service" style="width:160px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height:60px">
+							<td style="text-align: right">备注：</td>
+							<td colspan="3"><input class="easyui-textbox" id="input_memom" name="memo" style="width:490px;height: 80px;" data-options="multiline:true"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		
+		<div id="div_buttons">
+			<a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+
+</body>
+</html>

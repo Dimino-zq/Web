@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/sysGrantControl.js"></script>
+		<title>企业信息</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+		<div  data-options="region:'north',minHeight:40" style="border-bottom-width: 1px; margin-bottom:1px;">
+			<form id="form_query" >
+				<table style="margin-top:1px;margin-left:15px">
+					<tr>
+						<td>企业名称：<input class="easyui-textbox" name="comName" style="width: 150px;"></td>
+					</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></span>
+				</table>
+			</form>
+		</div>
+		
+		<div  data-options="region:'center'" style="border-width: 0;">
+			<table id="tbl_company"></table>
+		</div>
+		
+		<div data-options="region:'south',border:'false',minHeight:40">
+			<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+				<!-- 新增子管理员按钮 by tomset -->
+				<a class="easyui-linkbutton" id="btn_add" href="#" data-options="iconCls:'icon-add'">新增管理员</a>
+				<!-- 修改子管理员按钮 by tomset -->
+				<a class="easyui-linkbutton" id="btn_upd" href="#" data-options="iconCls:'icon-edit'">修改管理员</a>
+				<!-- 删除子管理员按钮 by tomset -->
+				<a class="easyui-linkbutton" id="btn_del" href="#" data-options="iconCls:'icon-edit'">删除管理员</a>
+
+						<a class="easyui-linkbutton" id="btn_assignDlg" href="#" data-options="iconCls:'icon-edit'">分配用户权限</a>
+						
+			</div>
+		</div>	
+		
+		<div title="权限分配" class="easyui-dialog" id="dlg_assign" style="width: 885px; height: 500px;" data-options="resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+			
+			<table id="tbl_assign" >
+						
+					</table>
+				
+			
+		</div>
+		
+		
+		<div id="div_buttons">
+		        <a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+		        <a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+		
+		<!-- 子管理员信息对话框 by tomset-->
+		<div id="dialog_admin" title="增加管理员" class="easyui-dialog" style="width: 290px; height: 195px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#btns_admin',closable:false,constrain:true">
+			<div style="height: 100%;">
+				<form id="form_admin">
+					<table style="padding-left: 30px;padding-top: 10px;padding-bottom: 5px;">
+						<tr style="height: 45px">
+							<td>用户名：</td><input type="hidden" id="input_userId" name="userId">
+							<td><input class="easyui-textbox" id="input_phoneNum" name="phoneNum" style="width: 150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+						<tr style="height: 45px">
+							<td>密码：</td>
+							<td><input class="easyui-textbox" id="input_password" name="password" style="width: 150px;" data-options="required:true,missingMessage:'必填'"></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		<!-- 子管理员信息对话框按钮 by tomset-->
+		<div id="btns_admin">
+	        <a id="btn_saveAdmin" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+	        <a id="btn_closeAdmin" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+		
+	</body>
+</html>

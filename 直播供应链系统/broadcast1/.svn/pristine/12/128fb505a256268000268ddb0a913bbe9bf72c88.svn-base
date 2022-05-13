@@ -1,0 +1,91 @@
+package edu.hfu.broadcast.action.sysset;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.service.sysset.SysCompanyService;
+import edu.hfu.broadcast.service.sysset.SystemService;
+
+@RestController
+@RequestMapping(value = "/SysPlatInformation")
+public class SystemAction {
+	@Resource
+	SystemService systemservice;
+	
+	@RequestMapping(value = "/gotoSysPlatInformation", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView gotoSysPlatInformation() {
+		ModelAndView mod = new ModelAndView("sysset/system.btl");
+		return mod;
+	}
+	
+	//查看全部
+	@RequestMapping(value = "/getAllSysPlatInformation", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<SysPlatInformation> getAllSysPlatInformation() {
+
+		try {
+			return systemservice.getAllSysPlatInformation();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//修改
+		@RequestMapping(value = "/updSysPlatInformation", method = { RequestMethod.GET, RequestMethod.POST })
+		public String updSysPlatInformation(HttpSession session, SysPlatInformation system, String companyTimeVal) {
+			String mess = "";
+
+			try {
+				system.setUpdDate(new Date());
+				mess = systemservice.updSysPlatInformation(system);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				mess = e.toString();
+			}
+			return mess;
+		}
+		
+	
+		//改密码
+		@RequestMapping(value = "/updSysPlatInformationPassword", method = { RequestMethod.GET, RequestMethod.POST })
+		public String updStudentInformationPassword(HttpSession session, String newpassword, String oldpassword) {
+			String mess = "";
+
+			try {
+				// SysCompany.setSchool(school);
+				/*
+				 * Date companyTime = DateUtil.strToDate(companyTimeVal,
+				 * "yyyy-MM-dd"); sysCompa.setCompanyTime(companyTime);
+				 */
+				// sysCompa.setUpdDate(new Date());
+				
+                Object user = session.getAttribute("user");
+				
+				SysUser plat = (SysUser) user;
+				mess = systemservice.chgPassword(plat, newpassword, oldpassword);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				mess = e.toString();
+			}
+			return mess;
+		}
+		
+		
+		
+		
+		
+		
+}

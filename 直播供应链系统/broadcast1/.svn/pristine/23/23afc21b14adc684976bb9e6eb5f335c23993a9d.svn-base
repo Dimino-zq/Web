@@ -1,0 +1,115 @@
+package edu.hfu.broadcast.dao.company;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import edu.hfu.broadcast.bean.ComGoodsInformation;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.base.BaseDaoImpl;
+
+@Repository
+public class GoodsInformationDao {
+	@Resource
+	private BaseDaoImpl dao;
+	
+	public List<ComGoodsInformation> getAllGoodsInformation() throws Exception {
+		String hql = "from ComGoodsInformation";
+		return dao.find(hql);
+	}
+	
+	//查询
+	public List<ComGoodsInformation> getComGoodsInformationByCon(ComGoodsInformation comgoods) throws Exception {
+		String hql = "from ComGoodsInformation ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != comgoods) {
+			if (null != comgoods.getGoodsName() && !"".equals(comgoods.getGoodsName())) {
+				hql += (index == 0 ? "where" : "and") + "  goodsName like?" + index++;
+				params.add('%' + comgoods.getGoodsName() + '%');
+			}
+		}
+		if (null != comgoods) {
+			if (null != comgoods.getBrandName() && !"".equals(comgoods.getBrandName())) {
+				hql += (index == 0 ? "where" : "and") + "  brandName like?" + index++;
+				params.add('%' + comgoods.getBrandName() + '%');
+			}
+		}
+		hql += " order by goodsId";
+		return dao.find(hql, params.toArray());
+	}
+	public List<ComGoodsInformation> getComGoodsInformationByCon(SysUser nowUser, ComGoodsInformation comgoods, int pageNo, int pageSize) throws Exception {
+		String hql = "from ComGoodsInformation goods ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != comgoods) {
+			if (null != comgoods.getGoodsName() && !"".equals(comgoods.getGoodsName())) {
+				hql += (index == 0 ? "where" : "and") + "  goodsName like?" + index++;
+				params.add('%' + comgoods.getGoodsName() + '%');
+			}
+		}
+		if (null != comgoods) {
+			if (null != comgoods.getBrandName() && !"".equals(comgoods.getBrandName())) {
+				hql += (index == 0 ? "where" : "and") + "  brandName like?" + index++;
+				params.add('%' + comgoods.getBrandName() + '%');
+			}
+		}
+		if (null != nowUser) {
+			if (null != nowUser && !"".equals(nowUser)) {
+			//	hql += (index == 0 ? "where" : "and") + "  goods.sysCompany.companyId=?" + index++;
+			//	params.add(nowUser.getUserId());
+				hql += (index == 0 ? "where" : "and") + "  goods.sysCompany.companyId='" +nowUser.getUserId()  +"'";
+			}
+		}
+		hql += " order by goodsId";
+		System.out.println(hql);
+		return dao.findByPage(hql, params.toArray(), pageNo, pageSize);
+		//return dao.findByPage(hql,  pageNo, pageSize);
+	}
+
+	public Integer getComGoodsInformationCountByCon(ComGoodsInformation comgoods) throws Exception {
+		String hql = "from ComGoodsInformation ";
+		int index = 0;
+		List<Object> params = new ArrayList<Object>();
+		if (null != comgoods) {
+			if (null != comgoods.getGoodsName() && !"".equals(comgoods.getGoodsName())) {
+				hql += (index == 0 ? "where" : "and") + "  goodsName like?" + index++;
+				params.add('%' + comgoods.getGoodsName() + '%');
+			}
+		}
+		if (null != comgoods) {
+			if (null != comgoods.getBrandName() && !"".equals(comgoods.getBrandName())) {
+				hql += (index == 0 ? "where" : "and") + "  brandName like?" + index++;
+				params.add('%' + comgoods.getBrandName() + '%');
+			}
+		}
+		hql += " order by goodsId";
+		return dao.queryBeanCountByHql(hql, params.toArray());
+	}
+	
+	//增加
+		public void saveComGoodsInformation(ComGoodsInformation comgoods) throws Exception {
+			dao.save(comgoods);
+		}
+		
+		//修改
+		public void updComGoodsInformation(ComGoodsInformation comgoods) throws Exception {
+			dao.update(comgoods);
+		}
+		
+		//删除
+		public void deleteComGoodsInformation(ComGoodsInformation comgoods) throws Exception {
+			String hql = "delete ComGoodsInformation where goodsId=?0";
+			dao.bulkUpdate(hql, comgoods.getGoodsId());
+		}
+		
+		//根据Id查询
+		public ComGoodsInformation GetComGoodsInformationById(ComGoodsInformation comgoods) throws Exception {
+			String hql = "from ComGoodsInformation where goodsId = " + comgoods.getGoodsId();
+			return (ComGoodsInformation) dao.find(hql).get(0);
+		}
+}

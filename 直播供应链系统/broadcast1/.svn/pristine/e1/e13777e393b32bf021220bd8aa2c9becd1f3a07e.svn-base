@@ -1,0 +1,60 @@
+package edu.hfu.broadcast.service.sysset;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.SysPlatInformation;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.sysset.SystemDao;
+import edu.hfu.broadcast.service.security.UserPassEncoder;
+
+@Service
+@Transactional
+public class SystemService {
+	@Resource
+	SystemDao systemdao;
+	
+	//获取全部
+	public List<SysPlatInformation> getAllSysPlatInformation() throws Exception {
+		return systemdao.getAllSysPlatInformation();
+	}
+	
+	//修改
+		public String updSysPlatInformation(SysPlatInformation system) throws Exception {
+			SysPlatInformation plat = systemdao.GetSysPlatInformationById(system);
+			plat.setPlatformName(system.getPlatformName());
+			systemdao.updSysPlatInformation(plat);
+			return "succ";
+		}
+
+		public String chgPassword(SysUser plat, String newpassword, String oldpassword) throws Exception {
+			// TODO Auto-generated method stub
+			
+			UserPassEncoder userPassEncoder = new UserPassEncoder();
+			
+			//数据库查密码
+			SysUser platForPassword = getUser(plat).get(0);
+			
+			if (userPassEncoder.matches(oldpassword, platForPassword.getPassword())) {
+				String newMd = userPassEncoder.encode(newpassword);
+				platForPassword.setPassword(newMd);
+				systemdao.chgPassword(platForPassword);
+				return "succ";
+
+			} else {
+				return "passworderror";
+			}
+			
+			
+		}
+
+		private List<SysUser> getUser(SysUser plat) throws Exception {
+			// TODO Auto-generated method stub
+			
+			return systemdao.getUser(plat);
+		}
+}

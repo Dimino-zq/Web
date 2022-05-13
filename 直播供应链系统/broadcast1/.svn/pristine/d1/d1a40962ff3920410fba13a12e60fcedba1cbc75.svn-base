@@ -1,0 +1,82 @@
+package edu.hfu.broadcast.service.sysset;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.action.sysset.SysGrantCode;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysGrant;
+import edu.hfu.broadcast.bean.SysUser;
+
+import edu.hfu.broadcast.dao.sysset.SysGrantControlDao;
+import edu.hfu.broadcast.util.MD5Util;
+
+@Service
+@Transactional
+public class SysGrantControlService {
+	@Resource
+	SysGrantControlDao sysGrantControlDao;
+	public List<SysUser> getAllSysGrantControl() throws Exception {
+		return sysGrantControlDao.getAllSysGrantCode();
+	}
+	
+	
+
+	public List<SysCompany> getSysCompanyByConForImport(SysCompany sysCompa) throws Exception {
+
+		return sysGrantControlDao.getSysCompanyByConForImport(sysCompa);
+	}
+
+	public List<SysCompany> getSysGrantControlByCon(SysGrant sysGrant, SysUser sysUser,int pageNo, int pageSize) throws Exception {
+		return sysGrantControlDao.getSysGrantControlByCon(sysGrant,sysUser, pageNo, pageSize);
+	}
+
+	public Integer getSysGrantControlCountByCon(SysGrant sysGrant ,SysUser sysUser) throws Exception {
+		return sysGrantControlDao.getSysGrantControlCountByCon(sysGrant,sysUser);
+	}
+	
+	//增加
+	  public String saveSysGrantControl(SysGrant sysGrant) throws Exception {
+	    // TODO Auto-generated method stub
+	    
+	    sysGrantControlDao.saveSysGrantControl(sysGrant);
+	   
+	    return "succ";
+	  }
+	
+	
+	  public List<SysGrant> getGrantId(String grantCode) throws Exception{
+			return sysGrantControlDao.getGrantById(grantCode);
+		}
+	  
+	//修改
+	public String updSysGrantControl(Integer userId, String grandCode) throws Exception {
+		
+		SysUser sysUser=sysGrantControlDao.getUserCon(userId).get(0);
+		if(null == grandCode || "".equals(grandCode)) {
+			sysUser.setGrants(null);
+		}else {
+			List<SysGrant> grantIds=getGrantId(grandCode);
+			System.out.println("+++++++++");
+			System.out.println(grantIds);
+			sysUser.setGrants(grantIds);
+		}
+		System.out.println("+++++++++");
+		System.out.println(sysUser);
+		sysGrantControlDao.updSysGrantControl(sysUser);
+		return "succ";
+	}
+	//删除
+	public void deleteSysGrantControl(SysGrant sysGrant) throws Exception {
+		sysGrantControlDao.deleteSysGrantControl(sysGrant);
+	}
+
+
+
+	
+}

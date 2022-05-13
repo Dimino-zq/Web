@@ -1,0 +1,5 @@
+package edu.hfu.broadcast.action.sysset;
+
+public class AnchorManageAction {
+
+}

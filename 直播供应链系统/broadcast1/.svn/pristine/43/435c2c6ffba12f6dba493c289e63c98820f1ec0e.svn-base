@@ -1,0 +1,206 @@
+$(document).ready(function(){
+	
+	var path=getRootPath();
+	
+	//加载数据表格
+	initTable();
+	
+	//点击提交查询信息
+	$("#btn_query").click(function(){
+		var queryParams=$('#form_query').serializeJSON();
+	    $('#tbl_anchorDistribute').datagrid('load',queryParams);
+	});
+	
+	/**
+	 * 增加商品申请对话框
+	 */
+	//打开对话框
+	$("#btn_appDlg").click(function(){
+		openDlg();
+	})
+	
+	//点击保存按钮
+	var clickTimes = 0;  //判断点击次数寄存
+	$("#btn_save").click(function(){
+		//此处操作是为了防止多次点击导致多次执行函数
+		clickTimes++;
+        if(clickTimes == 1) {
+    		var postData=$("#form_application").serializeJSON();
+    		if (postData)
+    			createApplication(postData);
+    		else
+    			alert("postData is null!");
+    		clickTimes = 0;    //重置点击次数寄存
+        } else {
+        	return;
+        }
+	});
+	
+	//保存创建的申请表
+	function createApplication(postData) {
+		//检查表单数据是否符合要求
+		if (checkForm(postData)) {
+			var url = path + "/anchorDistribute/saveapplication";
+			//post提交数据
+			$.post(url, postData, function (data) {
+				if(data != null && data.tip != null){
+					if(data.tip == "succ") {
+						$.messager.alert("提示", "已创建申请！", "info");
+						closeDlg();
+						clearForm();
+						initTable();
+					} else {
+						$.messager.alert("错误", data.tip ,"error");
+					}
+				} else {
+					$.messager.alert("错误", "未知错误！", "error");
+				}
+			});
+		} else {
+			return;
+		}
+	}
+	
+	
+	
+	//点击关闭按钮
+	$("#btn_close").click(function(){
+		closeDlg();
+		clearForm();
+	})
+	
+	
+	//打开商品申请对话框函数
+	function openDlg(){
+		$("#dlg_application").dialog("open");
+	}
+	
+	//关闭商品申请对话框函数
+	function closeDlg() {
+		$("#dlg_application").dialog("close");
+	}
+	
+	//重置对话框表单函数
+	function clearForm() {
+		//
+	}
+	
+	//表单字段校验
+	function checkForm(postData)
+	{
+//		if (postData.insurance == "")
+//			$("#input_insurance").next("span").find("a").click();
+//		else if (postData.surcomjob == "")
+//			$("#input_surcomjob").next("span").find("input[type='text']").focus();
+//		else if (postData.endDate == "")
+//			$("#input_endDate").next("span").find("a").click();
+//		else
+			return true;
+//		return false;
+	}
+	
+	function initTable(){
+		var url=path+"/anchorDistribute/getGoodsDistributionByCon";
+		
+		$("#tbl_anchorDistribute").datagrid({
+		  	loadMsg:"加载数据中......",
+	        url:url,
+	        border:false,
+	        striped:true,
+	        fit:true,
+	        rownumbers:true,
+	        autoRowHeight:false,
+	        singleSelect:true,
+	        fitColumns:true,
+	        pagePosition:"bottom",
+	        pagination:true,
+	        pageSize:10,
+	        pageList:[10,20,50],
+	        pageNumber:1,
+			columns:[[
+				{field:"goodsName",title:"产品名称",width:100,
+				 formatter:function(value,row,index){
+                        if(row){
+							return row.comgoodsinformation.goodsName;
+                               }
+						else{
+							return "";
+							
+						}
+	                          
+                        
+	                   }},
+				{field:"brandName",title:"品牌名字",width:100,
+				 formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.brandName;
+                        
+	                   }},
+				
+				{field:"size",title:"规格",width:100,
+				formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.size;
+                        
+	                   }},
+				{field:"goodsPrice",title:"产品单价",width:100,
+				formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.goodsPrice;
+                        
+	                   }},
+				{field:"inventory",title:"库存",width:100,
+				formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.inventory;
+                        
+	                   }},
+				{field:"productlinkman",title:"产品联系人",width:100,
+				formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.productlinkman;
+                        
+	                   }},
+				{field:"phonenumber",title:"联系电话",width:100,
+				formatter:function(value,row,index){
+                        
+	                          return row.comgoodsinformation.phonenumber;
+                        
+	                   }},
+				{field:"money",title:"佣金",width:100,},
+				
+		      ]]
+		});
+	}
+	
+	//院系和专业下拉列表框数据的初始化以及联动
+	$("#input_lv1").combobox({
+		valueField:'categoryName',
+		textField:'categoryName',
+		url:path+'/merchkind/getparent',
+		queryParams:{categorylevel:1},
+		onSelect:function(lv1){
+			var param = lv1.categoryId;
+			$("#input_lv2").combobox({
+				value:null,
+				valueField:'categoryName',
+				textField:'categoryName',
+				url:path+'/merchkind/getchildcategories',
+				queryParams:{"parentId":param},
+				onSelect:function(lv2){
+					var param = lv2.categoryId;
+					$("#input_businessCategory").combobox({
+						value:null,
+						valueField:'categoryName',
+						textField:'categoryName',
+						url:path+'/merchkind/getchildcategories',
+						queryParams:{"parentId":param}
+					});
+				}
+			});
+			$("#input_businessCategory").combobox("setValue","");
+		}
+	});
+	
+	
+})

@@ -1,0 +1,157 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	//alert(111);
+	company();
+	
+	
+	$("#btn_addDlg").click(function(){
+    	$("#dlg_company").dialog("open");
+  	});
+	//关闭
+	$("#btn_close").click(function(){
+		clearForm();
+   	$("#dlg_company").dialog("close");
+  });
+	
+	$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_company').datagrid('load',queryParams);
+    });
+
+
+$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_company').datagrid('load',queryParams);
+    });
+
+	//增加
+	$("#btn_save").click(function(){
+		$("#txt_signTime").attr("disabled","true");
+			
+			
+			var txt_grantId=$("#txt_grantId").val();
+			if (txt_grantId==""){
+		    	var url=path+"/sysgrantcode/saveSysGrantCode";
+		    	var postData=$('#form_company').serializeJSON();
+		    	$.post(url,postData,function(data){
+		        if (data=="succ"){
+		        	$.messager.alert("提示","增加成功","info")
+		        	$("#dlg_company").dialog("close");
+		        	$("#btn_query").click();
+		        	clearForm();
+		        }else{
+		          $.messager.alert("提示","企业名称重复，请更改后重试","info");
+				  $("#txt_comName").next("span").find("input[type='text']").focus();
+				  console.log(data);	
+		        }
+		      });
+			}
+		else {
+			var url=path+"/sysgrantcode/updSysGrantCode";
+			var postData=$('#form_company').serializeJSON();
+			$.post(url,postData,function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					$("#dlg_company").dialog("close");
+					$("#btn_query").click();
+					$("#form_company").form("reset");
+					clearForm();
+				}else{
+					$.messager.alert("提示","企业名称重复","info");
+				}
+			});
+		}
+	});
+	
+	//点击修改
+	$("#btn_updDlg").click(function(){
+		var  row=$('#tbl_company').datagrid("getSelected");
+		
+		if (row==null){
+			$.messager.alert("提示","请选中要修改的行","info");
+			return false;
+		}else{
+			$("#txt_grantId").val(row.grantId);
+			$("#txt_grantName").textbox("setValue",row.grantName);
+			$("#txt_grantCode").textbox("setValue",row.grantCode);
+			$("#txt_grantPath").textbox("setValue",row.grantPath);
+				
+			
+			$("#dlg_company").dialog("open");
+		}
+		});
+	
+	
+	//删除
+	$("#btn_delDlg").click(function () {
+    var row=$("#tbl_company").datagrid("getSelected");
+        if (null!=row)
+        {
+	 		$.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+				if (r)
+				{
+		          var grantId=row.grantId;
+		          var postData={"grantId":grantId};
+		          $.post((path+"/sysgrantcode/deleteSysGrantCode"),postData,function (data) {
+		              if ("deletesuccess"==data)
+		              {
+		                  $.messager.alert("提示","删除成功！","info");
+		                  company()
+		              }
+              	else 
+					{
+					$.messager.alert("提示","该企业正在使用!","info");
+			 		}
+                  
+          		});
+				}
+			});
+        }
+        else
+        {
+            $.messager.alert("提示","请选中一行！","info");
+			return false;
+        }
+    });
+
+//清空表单功能
+	function clearForm(){
+		$("#txt_companyId").val("");
+		$("#txt_comName").textbox("setValue","");
+		$("#txt_comPhone").textbox("setValue","");
+		$("#txt_comStartTime").datebox("setValue","");
+		$("#txt_comeail").textbox("setValue","");	
+		$("#txt_comContacts").textbox("setValue","");
+		$("#txt_comBusiness").textbox("setValue","");
+		$("#txt_businessRange").textbox("setValue","");
+		$("#txt_comAddress").textbox("setValue","");
+		$("#txt_comProfile").textbox("setValue","");
+		$('#dlg_company').dialog('setTitle', '增加企业');
+	}
+
+
+	function company(){
+		var url=path+"/sysgrantcode/getSysGrantCodeByCon";
+	    $("#tbl_company").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+            pagePosition:"bottom",
+            pagination:true,
+            pageSize:10,
+            pageList:[10,20,50],
+            pageNumber:1,
+	    	columns:[[
+			{field:"grantCode",title:"权限码",width:100},
+			{field:"grantName",title:"权限名",width:100},
+			{field:"grantPath",title:"权限path",width:100}
+	      ]]
+	    })
+	}
+})

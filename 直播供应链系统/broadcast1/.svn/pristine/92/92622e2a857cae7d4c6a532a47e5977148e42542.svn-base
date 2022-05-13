@@ -1,0 +1,310 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	//alert(111);
+	company();
+	
+	$("#btn_assignDlg").click(function(){
+		$("#dlg_assign").dialog("open");
+		var rowUser=$("#tbl_company").datagrid("getSelected");
+			console.log(rowUser);
+			var grant = rowUser.grants;
+     		
+		var url=path+"/sysgrantcode/getAllSysGrantCode";
+		console.log(url);
+	    $("#tbl_assign").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            
+            fitColumns:true,
+           
+           
+	    	columns:[[
+			{field :"ck",checkbox : 'true',fixed:true},
+			{field:"grantCode",title:"权限码",width:100},
+			{field:"grantName",title:"权限名",width:100}/*,
+			{field:"grantPath",title:"权限path",width:100},*/
+			
+
+	      ]],
+			onLoadSuccess:function(data){                   
+				if (data) {
+					$.each(data.rows, function(index, item) {
+						
+						for(var i=0;i<grant.length;i++){
+						console.log(grant[i].grantCode);
+			        			if(item.grantCode == grant[i].grantCode){
+										$('#tbl_assign').datagrid('checkRow', index);
+				
+									}
+      					}
+						
+
+					});
+
+				}
+
+			}      
+	    });
+		
+	});
+	
+	$("#btn_save").click(function(){
+		var rowUser=$("#tbl_company").datagrid("getSelected");
+		var checkedItems = $('#tbl_assign').datagrid('getChecked');	
+		var names = [];
+		var grantCodes="";
+			$.each(checkedItems, function(index, item){			
+			//names.push(item.grantCode);		
+			grantCodes += "'" + item.grantCode + "',";
+			});  
+			
+	    if(grantCodes!=""){
+	    	grantCodes=grantCodes.substr(0,grantCodes.length-1);
+	    }
+			console.log(rowUser.userId);
+			console.log(grantCodes);	             			
+		
+   	//	$("#dlg_assign").dialog("close");
+			var url=path+"/sysgrantcontrol/updSysGrantControl";
+			
+			$.post(url,{"grandCode":grantCodes,"userId":rowUser.userId},function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					$("#dlg_assign").dialog("close");
+					$("#btn_query").click();
+					
+				}else{
+					$.messager.alert("提示","shibai","info");
+				}
+			});
+		
+		
+ 	 });
+	
+	//关闭
+	$("#btn_close").click(function(){
+		
+   	$("#dlg_assign").dialog("close");
+  });
+	
+	$("#btn_query").click(function(){
+        var queryParams=$('#form_query').serializeJSON();
+        $('#tbl_company').datagrid('load',queryParams);
+    });
+
+
+  
+
+	
+
+	function company(){
+		var url=path+"/sysgrantcontrol/getSysGrantControlByCon";
+	    $("#tbl_company").datagrid({
+			loadMsg:"加载数据中......",
+            url:url,
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+			remoteSort:false,
+			sortName:"userRole",
+			sortOrder:"asc",
+            pagePosition:"bottom",
+            pagination:true,
+            pageSize:15,
+            pageList:[15,30,50],
+            pageNumber:1,
+	    	columns:[[
+			{field:"phoneNum",title:"用户账号",width:100},
+			{field:"userRole",title:"用户角色",width:100,sortable :true,sorter: function (a, b) { return (a > b ? 1 : -1) },
+	                  formatter:function(value,row,index){
+	                      if (row.userRole=="1")
+	                      {
+	                          return "平台人员";
+	                      }
+	                      else if(row.userRole=="2")
+	                      {
+	                          return "主播";
+	                      }
+						else if(row.userRole=="3")
+	                      {
+	                          return "企业管理员";
+	                      }else{
+			
+							}
+						}	
+			}						
+	      ]]
+	    })
+	}
+	
+	/**
+	 * 子管理员-打开增加对话框
+	 * @author tomset
+	 */
+	$("#btn_add").click(function(){
+		$("#dialog_admin").dialog("setTitle","增加管理员");
+		$("#dialog_admin").dialog("open");
+	})
+	
+	/**
+	 * 子管理员-打开修改对话框
+	 * @author tomset
+	 */
+	$("#btn_upd").click(function(){
+		var row = $("#tbl_company").datagrid("getSelected");
+		if (row==null){
+			$.messager.alert("提示","请选中一行数据!","info");
+			return false;
+		} else {
+			$("#dialog_admin").dialog("setTitle","修改管理员");
+			$("#input_userId").val(row.userId);
+			$("#input_phoneNum").textbox("setValue",row.phoneNum)
+			//$("#input_password").textbox("setValue",row.password)
+			$("#dialog_admin").dialog("open");
+		}
+	})
+	
+	/**
+	 * 子管理员-点击关闭按钮
+	 * @author tomset
+	 */
+	$("#btn_closeAdmin").click(function(){
+		$("#dialog_admin").dialog("close");
+		$("#input_userId").val("");
+		$("#input_phoneNum").textbox("setValue","")
+		$("#input_password").textbox("setValue","")
+	})
+	
+	/**
+	 * 子管理员-点击保存按钮
+	 * @author tomset
+	 */
+	var clickTimes = 0;  //判断点击次数寄存
+	$("#btn_saveAdmin").click(function(){
+		//此处操作是为了防止多次点击导致多次执行函数
+		clickTimes++;
+        if(clickTimes == 1) {
+    		var postData=$("#form_admin").serializeJSON();
+    		if (postData)
+    		{
+    			if(postData.userId!=null && postData.userId!="")
+    				updateAdmin(postData);
+    			else
+    				createAdmin(postData);
+    		}
+    		else
+    			alert("postData is null!");
+    		clickTimes =0;    //重置点击次数寄存
+        } else {
+        	return;
+        }
+	});
+	
+	/**
+	 * 子管理员-增加函数
+	 * @author tomset
+	 */
+	function createAdmin(postData) {
+		//检查表单数据是否符合要求
+		if (checkForm(postData)) {
+			var url = path + "/sysgrantcontrol/saveAdmin";
+			//post提交数据
+			$.post(url, postData, function (data) {
+				if(data != null && data.tip != null){
+					if(data.tip == "succ") {
+						$.messager.alert("提示", "增加成功！", "info");
+						$("#btn_closeAdmin").click();
+						company();
+					} else {
+						$.messager.alert("错误", data.tip ,"error");
+					}
+				} else {
+					$.messager.alert("错误", "未知错误！", "error");
+				}
+			});
+		} else {
+			return;
+		}
+	}
+	
+	/**
+	 * 子管理员-修改函数
+	 * @author tomset
+	 */
+	function updateAdmin(postData) {
+		if (checkForm(postData)) {
+			var url = path + "/sysgrantcontrol/updateAdmin";
+			$.post(url, postData, function (data) {
+				if(data != null && data.tip != null){
+					if(data.tip == "succ") {
+						$.messager.alert("提示", "修改成功！", "info");
+						$("#btn_closeAdmin").click();
+						company();
+					} else {
+						$.messager.alert("错误", data.tip, "error");
+					}
+				} else {
+					$.messager.alert("错误", "未知错误！", "error");
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 子管理员-表单字段校验函数
+	 * @author tomset
+	 */
+	function checkForm(postData)
+	{
+		if (postData.phoneNum == "")
+			$("#input_phoneNum").next("span").find("input[type='text']").focus();
+		if (postData.password == "")
+			$("#input_password").next("span").find("input[type='text']").focus();
+		else
+			return true;
+		return false;
+	}
+	
+	/**
+	 * 子管理员-点击删除按钮
+	 * @author tomset
+	 */
+	$("#btn_del").click(function () {
+		var row = $("#tbl_company").datagrid("getSelected");
+		//检查是否选中数据
+		if (row == null) {
+			$.messager.alert("提示", "请选中一行数据!", "info");
+		} else {
+			$.messager.confirm("确认", "您确认想要删除记录吗？", function (r) {
+				if (r) {
+					var userId = row.userId;
+					var postData = {"userId": userId};
+					var url = path + "/sysgrantcontrol/delAdmin";
+					$.post(url, postData, function (data) {
+						if(data != null && data.tip != null){
+							if(data.tip == "succ") {
+								$.messager.alert("提示", "删除成功！", "info");
+								company();
+							}
+							else {
+								$.messager.alert("错误", data.tip, "error");
+							}
+						} else {
+							$.messager.alert("错误", "未知错误！", "error");
+						}
+					});
+				}
+			});
+		}
+	});
+	
+})

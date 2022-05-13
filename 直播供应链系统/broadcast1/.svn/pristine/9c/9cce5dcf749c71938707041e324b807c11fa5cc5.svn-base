@@ -1,0 +1,97 @@
+package edu.hfu.broadcast.service.anchor;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import edu.hfu.broadcast.bean.AnchorInformation;
+import edu.hfu.broadcast.bean.ComGoodsInformation;
+import edu.hfu.broadcast.bean.SysCompany;
+import edu.hfu.broadcast.bean.SysUser;
+import edu.hfu.broadcast.dao.anchor.anchorInformDao;
+import edu.hfu.broadcast.service.security.UserPassEncoder;
+
+@Service
+@Transactional
+public class anchorInformService {
+	@Resource
+	anchorInformDao anchordao;
+	//获取全部
+	public List<AnchorInformation> getAllAnchorInformation(AnchorInformation anchormation) throws Exception {
+		return anchordao.getAllAnchorInformation(anchormation);
+		
+	}
+	//修改
+	public String updAnchorInformation(AnchorInformation anchorinform,SysUser userId) throws Exception {
+		AnchorInformation anchor;
+		anchor=anchordao.getUser(userId);
+
+		anchor.setAnchorName(anchorinform.getAnchorName());
+		anchor.setAnchorSex(anchorinform.getAnchorSex());
+		anchor.setPhone(anchorinform.getPhone());
+		anchor.setAnchorPlatform(anchorinform.getAnchorPlatform());
+		anchor.setFans(anchorinform.getFans());
+		anchor.setPitFee(anchorinform.getPitFee());
+		anchor.setNinetySale(anchorinform.getNinetySale());
+		anchor.setRoomId(anchorinform.getRoomId());
+		anchor.setBirthDay(anchorinform.getBirthDay());
+		anchor.setWorkTime(anchorinform.getWorkTime());
+		anchor.setBusinessAmount(anchorinform.getBusinessAmount());
+		anchor.setOnlinePhoto(anchorinform.getOnlinePhoto());
+		anchor.setThirtyWorkTimes(anchorinform.getThirtyWorkTimes());
+		anchor.setInvestedInformation(anchorinform.getInvestedInformation());
+		anchor.setPerCustomerPrice(anchorinform.getPerCustomerPrice());
+		anchor.setSaleCategory(anchorinform.getSaleCategory());
+		anchordao.updAnchorInformation(anchor);
+		return "succ";
+			}
+	
+	//更改密码
+	public String chgPassword(SysUser plat, String newpassword, String oldpassword) throws Exception {
+		// TODO Auto-generated method stub
+		 System.out.println(plat);System.out.println(newpassword);System.out.println(oldpassword);
+		 
+		UserPassEncoder userPassEncoder = new UserPassEncoder();
+		
+		//数据库查密码
+		SysUser anchorForPassword =anchordao.getUser(plat).getUser();
+		 System.out.println(anchorForPassword);
+		if (userPassEncoder.matches(oldpassword, anchorForPassword.getPassword())) {
+			String newMd = userPassEncoder.encode(newpassword);
+			anchorForPassword.setPassword(newMd);
+
+			 System.out.println("--------------------------------------");
+			 System.out.println(newpassword); System.out.println(oldpassword);
+			 System.out.println("anchorForPassword"+anchorForPassword);
+			 System.out.println("--------------------------------------");
+			anchordao.chgPassword(anchorForPassword);
+			return "succ";
+
+		} else {
+			return "passworderror";
+		}
+		
+		
+	}
+	public AnchorInformation getUser(SysUser plat) throws Exception {
+		// TODO Auto-generated method stub
+		
+		return anchordao.getUser(plat);
+	}
+	
+
+	//增加
+			public String saveAnchorByHand(SysUser nowUser, AnchorInformation anchorinform) throws Exception {
+				
+				anchorinform.setCreateDate(new Date());
+				anchorinform.setUpdDate(new Date());
+				anchordao.saveAnchorInformation(anchorinform);
+				return "succ";
+			}
+
+	
+}

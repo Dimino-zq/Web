@@ -1,0 +1,36 @@
+package edu.hfu.broadcast.bean;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/*主播商品分配表*/
+@Data
+@Entity
+@EqualsAndHashCode(callSuper = false)
+public class GoodsDistribution extends SysBaseTable{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
+	private Integer distributeId; // 商品编号
+	@Column(length = 20)
+	private String money; // 佣金
+	
+	
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.DETACH)
+	@JoinColumn(name = "anchorId")
+	private AnchorInformation anchorInformation;
+	
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.DETACH)
+	@JoinColumn(name = "goodsId")
+	private ComGoodsInformation comgoodsinformation;
+
+}

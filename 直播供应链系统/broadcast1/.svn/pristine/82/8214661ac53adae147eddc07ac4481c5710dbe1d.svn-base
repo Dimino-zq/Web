@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/merchKind.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/datagrid-detailview.js"></script>
+		<title>商品类别</title>
+	</head>
+	<body class="easyui-layout" data-options="fit:true">
+		<div  data-options="region:'north',minHeight:40" style="border-bottom-width: 1px; margin-bottom:1px;">
+			<% if(hasPermission('03-04-001')) {%>
+			<div>
+			<form id="form_query" >
+				<table style="margin-top:1px;margin-left:15px">
+					<tr>
+						<!-- <td>所属类别:<input class="easyui-combobox" name="parent.categoryName" style="width: 150px;"></td> -->
+						<td align="right">类别名称：</td>
+						<td><input class="easyui-textbox" name="categoryName" style="width: 150px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>类别等级：</td>
+						<td>
+							<select class="easyui-combobox" name="categorylevel" style="width:150px;" data-options="editable:false">
+							    <option value="">全部</option>
+							    <option value="1">一级</option>
+							    <option value="2">二级</option>
+							    <option value="3">三级</option>
+							</select>
+						</td>
+					</tr>
+					<span style="float: right;margin-top:3.5px;margin-right:25px"><a class="easyui-linkbutton" id="btn_query" href="#" data-options="iconCls:'icon-search'">查询</a></span>
+				</table>
+			</form>
+			</div>
+			 <% }%>
+		</div>
+		
+		<div data-options="region:'south',border:'false',minHeight:40"  >
+			<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+				<% if(hasPermission('03-04-002')) {%>
+				<a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-add'">增加</a>
+				 <% }%>
+				<% if(hasPermission('03-04-003')) {%>
+				<a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-edit'">修改</a>
+				 <% }%>
+				<% if(hasPermission('03-04-004')) {%>
+				<a class="easyui-linkbutton" id="btn_delDlg" href="#" data-options="iconCls:'icon-remove'">删除</a>
+				 <% }%>
+			
+			</div>
+		</div>
+		
+		<div  data-options="region:'center'" style="border-width: 0;">
+			<table id="tbl_merchKind"></table>
+		</div>
+		
+		<div title="新增类别" class="easyui-dialog" id="dlg_merchKind" style="width: 450px; height: 270px;" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,closable:false,buttons:'#div_buttons'">
+			<div style="width:100%;">
+				<form id="form_merchKind">
+					<table style="text-align: center;margin-left: auto;margin-right: auto;">
+						<tr style="height:35px;">
+						    <td style="text-align: right;">类别名称:<input type="hidden" id="txt_merchKindId" name="categoryId"></td>
+						    <td style="width:160px"><input class="easyui-textbox" id="txt_KindName" name="categoryName" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td></br>
+						</tr>
+						<tr style="height:40Fpx;">
+						    <td style="text-align: right;">等级:</td>
+							<td>
+								<select class="easyui-combobox" name="categorylevel" id="com_level" style="width: 150px;">
+									<option value="1">一级类别</option>
+							  		<option value="2">二级类别</option>
+							  		<option value="3">三级类别</option>
+							  	</select>
+							</td>
+						</tr>
+						<tr style="height:40px;">
+						    <td style="text-align: right;">上级类别:</td>
+						    <td style="width:160px"><input class="easyui-combobox" id="txt_merFchKind" name="parent.categoryId" style="width:150px;" data-options="required:true,missingMessage:'必填'"></td></br>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+		
+		<div id="div_buttons">
+			<a id="btn_save" href="#" class="easyui-linkbutton" style="width: 80px;">保&nbsp;&nbsp;存</a>
+			<a id="btn_close" href="#" class="easyui-linkbutton" style="width: 80px;">关&nbsp;&nbsp;闭</a>
+		</div>
+	</body>
+</html>

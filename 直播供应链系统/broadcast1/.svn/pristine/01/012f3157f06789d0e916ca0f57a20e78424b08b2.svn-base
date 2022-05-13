@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${ctxPath}/static/css/themes/icon.css">
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/common.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="${ctxPath}/static/js/jquery.serializejson.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/sysset/js/system.js"></script>
+		<title>平台信息</title>
+	</head>
+		<body class="easyui-layout"  data-options="fit:true">
+			
+				<div  data-options="region:'north',minHeight:80" style="border-bottom-width: 0;height: 50px">
+				<div style="align-content: center; height: 30px ;color: #3399CC;font-family: 宋体;font-size:27.5px;" align="center"><strong>电商平台信息</strong></div>
+				<hr />	</div>
+				<div  data-options="region:'center',border:'false'">
+						<form id="form_add1">
+							<table style="width: 75%;margin-top: 10px" align="center">
+							   		  <tr >
+							          <td style="width:20%; font-size:18px;text-align: right;">平台名称:<input type="hidden" id="txt_schoolId" name="schoolId" value="${platformId}" ></td>
+							          <td style="width:30%;"> <input class="easyui-textbox" id="txt_schoolName" name="schoolName"  value="${platformName}" data-options="required:true,readonly:true" style="width: 280px;"></td>
+							          <td style="width:20%;font-size:18px;text-align: right;">负责人电话:</td>
+							          <td style="width:30%;"> <input class="easyui-textbox" id="txt_schoolTel" name="schoolTel" value="${directorPhone}" data-options="required:true,readonly:true" style="width: 280px;"></td>
+							        </tr>
+								<tr style="height: 20px"></tr>
+							        <tr >
+							        	<td style="width:20%;text-align: right;font-size:18px;">平台负责人:</td>
+							        	<td style="width:30%;"><input class="easyui-textbox" id="txt_schoolMaster" data-options="required:true,readonly:true" name="schoolMaster" value="${platformDirector}" style="width: 280px;"></td>
+							          	<td style="width:20%;text-align: right;font-size:18px;">系统管理员:</td>
+							          	<td style="width:30%;">
+										<input class="easyui-textbox" id="txt_schoolAdmin" name="schoolAdmin" data-options="required:true,readonly:true" value="${sysAdministrators}" style="width: 280px;">
+									    </td>
+							        </tr>
+								<tr style="height: 20px"></tr>
+							        <tr>
+							           <td style="width:20%;text-align: right;font-size:18px;">平台简介: </td>
+							           <td colspan="3" style="width:100%;"><input class="easyui-textbox" id="txt_schoolIntroduce" name="schoolIntroduce" value="${briefIntroduction}"  data-options="label:'',min:0,precision:0,multiline:true,readonly:true " style="width: 780px;height:130px"></td>
+							        </tr>
+								
+							</table>
+						</form>    
+					</div>
+					
+					
+				<div data-options="region:'south',border:'false',minHeight:40" >	      
+						<div style="width: 100%;text-align: right;height: 35px;margin-top:2px; position:absolute; bottom:0px; right:0px;padding: 2px;">
+						     		<a class="easyui-linkbutton" id="btn_addDlg" href="#" data-options="iconCls:'icon-search'">修改管理员信息</a>
+							        <a class="easyui-linkbutton" id="btn_updDlg" href="#" data-options="iconCls:'icon-search'">修改管理员密码</a>
+					 	</div>
+				 	</div>
+				
+				
+			<div title="系统信息" class="easyui-dialog" id="dlg_system111" style="width: 570px; height: 380px;text-align: center;" 
+				    data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#div_buttons1'">
+					    <div style="width:95%;text-align: center;padding: 5px;margin-left: auto;margin-right: auto">
+						      <form id="form_add">
+						      <input class="easyui-textbox" type="hidden" id="txt_platformId" name="platformId">
+				    	        <table style="padding-top: 5px;" align="center">			    	     
+						   		  <tr>
+						          <td style="width:20%;text-align: right;">平台名称:</td>
+						          <td style="width:30%;"> <input class="easyui-textbox" id="txt_platformName" name="platformName"  data-options="required:true"style="width: 150px;"></td>
+						          <td style="width:20%;text-align: right;">负责人电话:</td>
+						          <td style="width:50%;"> <input class="easyui-textbox" id="txt_directorPhone" name="directorPhone"   style="width: 150px;"></td>
+						        </tr>
+						        
+						        <tr>
+						        	<td style="width:20%;text-align: right;">平台负责人:</td>
+						        	<td style="width:150px;"><input class="easyui-textbox" id="txt_platformDirector"  name="platformDirector" style="width: 150px;"></td>
+						          	<td style="width:20%;text-align: right;">系统管理员：</td>
+						          	<td style="width:200px;">
+									<input class="easyui-textbox" id="txt_sysAdministrators" name="sysAdministrators"   style="width: 150px;">
+								    </td>
+						        </tr>
+						        
+						        <tr>
+						           <td style="width:20%;text-align: right;">平台简介: </td>
+						          <td colspan="3" style="width:70%;"><input class="easyui-textbox" id="txt_briefIntroduction" name="briefIntroduction"   data-options="label:'',min:0,precision:0,multiline:true " style="width: 410px;height:130px"></td>
+						        </tr>
+		
+				    	</table>
+				    </form>
+			</div>
+			</div>
+			
+						<div title="修改密码" class="easyui-dialog" id="dlg_password" style="width: 350px; height: 195px;text-align: center;" 
+						    data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,buttons:'#div_buttons'">
+							    <div style="width:95%;text-align: center;padding: 5px;margin-left: auto;margin-right: auto">
+								      <form id="form_passwordinfo">
+									      <table align="center" style="width:100%">
+									        <tr>
+									          <td style="width:20%;text-align: right;">旧密码:<input type="hidden" id="txt_schoolId" name="schoolId"></td>
+									          <td style="width:30%;"><input id="input_oldpassword" name="oldpassword" class="easyui-passwordbox" iconWidth="28" style="width:150px" data-options="required:true,missingMessage:'请输入您的旧密码'"></td>
+									          
+									        </tr>
+											<tr>
+											  <td style="width:20%;text-align: right;">新密码:</td>
+									          <td style="width:50%;"><input id="input_newpassword" name="newpassword" class="easyui-passwordbox" iconWidth="28" style="width:150px" data-options="required:true,missingMessage:'请输入至少六位的新密码'"></td>
+										    
+										    
+										    </tr>
+										    <tr>
+											  <td style="width:20%;text-align: right;">确认密码:</td>
+									          <td style="width:50%;"><input id="input_secnewpassword" class="easyui-passwordbox" iconWidth="28" style="width:150px" data-options="required:true,missingMessage:'请重复输入密码'"></td>
+										    
+										    
+										    </tr>
+										    </table>
+										</form>
+							       </div>
+							  </div>
+		
+		     
+		
+		 	       
+		  <div id="div_buttons">
+		      <a class="easyui-linkbutton" href="#" id="btn_save">保存</a>
+		      <a class="easyui-linkbutton" href="#" id="btn_close">关闭</a>
+		  </div>
+		
+		  <div id="div_buttons1">
+		      <a class="easyui-linkbutton" href="#" id="btn_save1">保存</a>
+		      <a class="easyui-linkbutton" href="#" id="btn_close1">关闭</a>
+		  </div>
+	</body>
+</html>

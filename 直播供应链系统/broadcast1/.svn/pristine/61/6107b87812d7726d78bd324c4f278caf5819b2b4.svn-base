@@ -1,0 +1,238 @@
+$(document).ready(function(){
+	var path=getRootPath();
+	initTable();
+	//点击提交查询信息
+	$("#btn_query").click(function(){
+		var queryParams=$('#form_query').serializeJSON();
+	    $('#tbl_anchor').datagrid('load',queryParams);
+	    });
+	//打开增加对话框
+	$("#btn_addDlg").click(function () {
+	   	$("#dialog_anchor").dialog("setTitle","增加主播信息");
+	    $("#dialog_anchor").dialog("open");
+	    });
+	//关闭对话框
+	$("#btn_close").click(function () {
+		clearForm();
+	    $("#dialog_anchor").dialog("close");
+	    });
+
+//增加
+	$("#btn_save").click(function(){
+		$("#input_anchorName").attr("disabled","true");
+			var anchorName=$("#input_anchorName").textbox("getValue");
+			if (anchorName==""){
+				$.messager.alert("提示","请输入主播姓名!","info");
+				$("#input_anchorName").next("span").find("input[type='text']").focus();
+			return  false;
+			}
+
+		var input_anchorId=$("#input_anchorId").val();
+		  if (input_anchorId==""){
+	      var url=path+"/anchor/saveAnchor";
+	      var postData=$('#form_anchor').serializeJSON();
+	      $.post(url,postData,function(data){
+	        if (data=="succ"){
+	          $.messager.alert("提示","增加成功","info")
+	          $("#dialog_anchor").dialog("close");
+	          $("#btn_query").click();
+	          clearForm();
+	        }else{
+	          $.messager.alert("提示","主播重复，请更改后重试","info");
+			  $("#input_anchorName").next("span").find("input[type='text']").focus();	
+	        }
+	      });
+		}else{
+			var url=path+"/anchor/updateAnchor";
+			var postData=$('#form_anchor').serializeJSON();
+			$.post(url,postData,function(data){
+				if (data=="succ"){
+					$.messager.alert("提示","修改成功","info");
+					$("#dialog_anchor").dialog("close");
+					$("#btn_query").click();
+					$("#form_add").form("reset");
+					clearForm();
+				}else{
+					$.messager.alert("提示","实习单位名称重复","info");
+				}
+			});
+		}
+	});
+	
+	
+	//点击修改
+	$("#btn_updDlg").click(function(){
+		var  row=$('#tbl_anchor').datagrid("getSelected");
+		
+		if (row==null){
+			$.messager.alert("提示","请选中要修改的行","info");
+			return false;
+		}else{
+			$("#input_anchorId").val(row.anchorId);
+			$("#input_anchorNo").val(row.anchorNo);
+			$("#input_anchorName").textbox("setValue",row.anchorName);
+			var anchorSex=row.anchorSex;
+			if ("男"==anchorSex)
+			{
+				$("#rdo_anchorSexboy").radiobutton("check",0);
+			}
+			else
+			{
+				$("#rdo_anchorSexgirl").radiobutton("check",1);
+			}
+			$("#input_birthDay").datebox("setValue",row.birthDay);
+			$("#input_phone").textbox("setValue",row.phone);
+			$("#input_roomId").textbox("setValue",row.roomId);
+			$("#input_anchorPlatform").textbox("setValue",row.anchorPlatform);
+			$("#input_fans").textbox("setValue",row.fans);
+			$("#input_pitFee").textbox("setValue",row.pitFee);
+			$("#input_ninetySale").textbox("setValue",row.ninetySale);
+		    $("#input_nativeplace").textbox("setValue",row.nativeplace);
+		    $("#input_workTime").textbox("setValue",row.workTime);
+			$("#input_businessAmount").textbox("setValue",row.businessAmount);
+			$("#input_thirtyWorkTimes").textbox("setValue",row.thirtyWorkTimes);
+			$("#input_perCustomerPrice").textbox("setValue",row.perCustomerPrice);
+			$("#input_saleCategory").textbox("setValue",row.saleCategory);
+			$("#input_investedInformation").textbox("setValue",row.investedInformation);
+			$("#input_onlinePhoto").textbox("setValue",row.onlinePhoto);
+
+		    $("#dialog_anchor").dialog("setTitle","修改主播信息");
+			$("#dialog_anchor").dialog("open");
+		}
+		});
+	
+	//删除
+	$("#btn_delDlg").click(function () {
+    var row=$("#tbl_anchor").datagrid("getSelected");
+        if (null!=row)
+        {
+          var anchorId=row.anchorId;
+          var postData={"anchorId":anchorId};
+          $.post((path+"/anchor/delAnchor"),postData,function (data) {
+              if ("success"==data)
+              {
+                  $.messager.alert("提示","删除成功！","info");
+                  initTable();
+              }
+              else 
+				{
+					$.messager.alert("提示","该主播正在忙碌!","info");
+			  }
+                  
+          });
+        }
+        else
+        {
+            $.messager.alert("提示","请选中一行！","info");
+			return false;
+        }
+    });
+	
+	
+	//确定
+	$("#btn_ok").click(function(){
+			  $.messager.alert("提示","增加成功","info")
+	});
+	//删除
+	/*$("#btn_delDlg").click(function() {
+		var row = $('#tbl_anchor').datagrid("getSelected");
+		if (row == null) {
+			$.messager.alert("提示", "请选中要删除的行", "info");
+			return false;
+		}
+	});*/
+	//分配商品关闭
+    $("#btn_close").click(function () {
+        $("#dialog_mag").dialog("close");
+    });
+	//点击分配商品对话框打开
+    $("#btn_disDlg").click(function () {
+        $("#dialog_mag").dialog("open");
+    });
+
+    //分配商品初始化表单
+	/*function shop() {
+        $('#tab_mag').datagrid({
+            url:'datagrid_data.json',
+            border:false,
+            striped:true,
+            fit:true,
+            rownumbers:true,
+            autoRowHeight:false,
+            singleSelect:true,
+            fitColumns:true,
+            columns:[[
+                {field: 'anchorName',checkbox:true},
+                {field: 'shopName',title: '商品名称',width:150},
+                {field: 'shoptopy',title: '商品类别',width:150},
+                {field: 'shopshuxing',title: '商品属性',width:150},
+                {field: 'shopkc',title: '商品库存',width:150},
+
+            ]],
+        });
+    }*/
+	//清空表单功能
+	function clearForm(){
+		$("#input_anchorId").val("");
+		$("#input_anchorNo").val("");
+		$("#input_anchorName").textbox("setValue","");
+		$("#rdo_anchorSexboy").radiobutton("check",0);
+		$("#input_birthDay").datebox("setValue","");
+		$("#input_phone").textbox("setValue","");
+		$("#input_roomId").textbox("setValue","");
+		$("#input_anchorPlatform").textbox("setValue","");	
+		$("#input_fans").textbox("setValue","");
+		$("#input_pitFee").textbox("setValue","");
+		$("#input_ninetySale").textbox("setValue","");
+		$("#input_workTime").textbox("setValue","");
+		$("#input_businessAmount").textbox("setValue","");
+		$("#input_thirtyWorkTimes").textbox("setValue","");
+		$("#input_perCustomerPrice").textbox("setValue","");
+		$("#input_saleCategory").textbox("setValue","");
+		$("#input_investedInformation").textbox("setValue","");
+		$("#input_onlinePhoto").textbox("setValue","");
+		$('#dlg_company').dialog('setTitle', '增加主播');
+	}
+
+	function initTable() {
+		var url=path+"/anchor/getAllAnchor";
+		$('#tbl_anchor').datagrid({
+	            loadMsg:"加载数据中......",
+            	url:url,
+	            border:false,
+	            striped:true,
+	            fit:true,
+	            rownumbers:true,
+	            autoRowHeight:false,
+	            singleSelect:true,
+	            fitColumns:true,
+	            pagePosition:"bottom",
+	            pagination:true,
+	            pageSize:10,
+	            pageList:[10,20,50],
+	            pageNumber:1,
+	            columns:[[
+	                {field: 'anchorName',title: '姓名',width:150},
+	                {field: 'anchorSex',title: '性别',width:150},
+	                {field: 'nativeplace',title: '籍贯',width:150},
+					{field: 'birthDay',title: '生日',width:150},
+					{field:'phone',title:'联系电话',width:100}
+	             ]]
+	    })
+	}
+			
+	//初始化各个下拉列表框数据
+	    function initCombobox()
+	    {
+			//民族下拉列表框
+					$("#input_nationality").combobox({
+						value:'汉族',
+				    	editable:false,
+				    	method:'get',
+				    	url:path+'/static/data/nation.json',
+				    	textField:'name',
+				    	valueField:'name'
+				    });
+		}
+		
+	})
